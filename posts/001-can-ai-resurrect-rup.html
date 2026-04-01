@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Can AI Resurrect the Rational Unified Process? | Brave New IA World</title>
+<meta name="description" content="What if RUP was never too heavy — just waiting for non-human executors? Introducing AIRUP: an AI-first software process where agents assume RUP roles, governed by an AI Governor to control cost and coordination in multi-agent pipelines.">
+<meta name="author" content="Ricardo Costa">
+<meta name="keywords" content="AIRUP, RUP, Rational Unified Process, AI agents, multi-agent systems, Specification-Driven Development, SDD, AI Governor, software engineering, master thesis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Can AI Resurrect the Rational Unified Process?">
+<meta property="og:description" content="AIRUP proposes an AI-first development process where agents assume traditional RUP roles — from requirements to deployment — governed by an AI Governor that controls cost and prevents decision loops.">
+<meta property="og:site_name" content="Brave New IA World">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Can AI Resurrect the Rational Unified Process?">
+<meta name="twitter:description" content="What if the methodology we abandoned for being too heavy was actually perfect — just waiting for AI agents? Introducing AIRUP.">
+<meta property="article:published_time" content="2026-07-01">
+<meta property="article:author" content="Ricardo Costa">
+<meta property="article:section" content="Software Engineering">
+<meta property="article:tag" content="AI Agents">
+<meta property="article:tag" content="RUP">
+<meta property="article:tag" content="AIRUP">
+<meta property="article:tag" content="SDD">
+<meta property="article:tag" content="Multi-Agent Systems">
+<link rel="canonical" href="https://bravenewiaworld.com/posts/001-can-ai-resurrect-rup.html">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="blog-header">
+  <a href="/" class="blog-brand">Brave New IA World</a>
+  <nav class="blog-nav">
+    <a href="/">Home</a>
+    <a href="/#posts">Archive</a>
+    <span class="tag">Inaugural Post</span>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero-post">
+  <div class="hero-label">Post #001 &mdash; Software Engineering x AI</div>
+  <h1>Can AI <span class="highlight">Resurrect</span> the Rational Unified Process?</h1>
+  <p class="hero-subtitle">What if the methodology we abandoned for being "too heavy for humans" was actually perfect — just waiting for non-human executors?</p>
+  <div class="hero-meta">
+    <span>Ricardo Costa</span>
+    <span class="dot"></span>
+    <span>~10 min read</span>
+    <span class="dot"></span>
+    <span>July 2026</span>
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<article class="article">
+
+  <p class="lead fade-in">
+    In the early 2000s, the software industry collectively decided that the Rational Unified Process was too much. Too many artifacts. Too many roles. Too much ceremony. Agile won. RUP faded into textbooks and enterprise consulting decks. But what if the problem was never the process itself — what if it was simply that <strong>humans were the wrong executors</strong>?
+  </p>
+
+  <p class="fade-in">
+    Welcome to <strong>Brave New IA World</strong>. This blog is about the intersection of software engineering and artificial intelligence — not AI as a product, but AI as a <em>participant</em> in the engineering process itself. And I can't think of a better way to inaugurate it than with the question driving my master's thesis: <strong>Can a multi-agent AI system bring the Rational Unified Process back to life?</strong>
+  </p>
+
+  <p class="fade-in">
+    The short answer: I believe it can — and that it should. Let me tell you why.
+  </p>
+
+  <!-- SECTION: THE FALL -->
+  <h2 class="fade-in">The Rise and Fall of RUP</h2>
+
+  <p class="fade-in">
+    The Rational Unified Process, created by Philippe Kruchten at Rational Software (later IBM), was one of the most comprehensive attempts to formalize software development. It defined <strong>four phases</strong> (Inception, Elaboration, Construction, Transition), <strong>nine disciplines</strong> (from Business Modeling to Deployment), and a rich set of <strong>roles, activities, and artifacts</strong> connected through iterative cycles.
+  </p>
+
+  <p class="fade-in">
+    RUP's intellectual foundations were solid. It was built on the Unified Modeling Language (UML), Grady Booch's object-oriented methods, Ivar Jacobson's use-case-driven approach, and Jim Rumbaugh's Object Modeling Technology. It embodied six best practices: develop iteratively, manage requirements, use component-based architecture, model visually, verify quality, and control changes.
+  </p>
+
+  <p class="fade-in">
+    So what went wrong? Nothing, really — except that <strong>humans found it exhausting</strong>. The volume of documentation, the number of artifacts per iteration, the formality of role definitions — all of it created friction. Teams started cutting corners. The Agile Manifesto arrived in 2001, privileging "working software over comprehensive documentation" and "individuals and interactions over processes and tools." RUP became the poster child for heavyweight methodology.
+  </p>
+
+  <blockquote class="fade-in">
+    "RUP was never bad engineering. It was bad ergonomics — for a species that gets bored writing the third UML diagram."
+  </blockquote>
+
+  <p class="fade-in">
+    But here's the thing: the problems that RUP addressed — scope creep, architectural erosion, poor traceability, integration chaos — didn't go away. Agile teams still struggle with them. We just traded formal discipline for informal heroics. And now, with AI agents entering the scene, we have an opportunity to revisit that tradeoff.
+  </p>
+
+  <!-- SECTION: SDD -->
+  <h2 class="fade-in">The Rise of Specification-Driven Development</h2>
+
+  <p class="fade-in">
+    Before diving into the thesis, it's worth understanding the broader movement that makes this possible: <strong>Specification-Driven Development (SDD)</strong>.
+  </p>
+
+  <p class="fade-in">
+    SDD is an emerging paradigm where <strong>structured specifications — written in markdown or formal templates — serve as the source of truth</strong> for AI agents. Instead of asking an AI to "build me a REST API for users," you write a specification that defines the domain model, the API contract, the validation rules, the error codes, and the test scenarios. The AI agent then executes against that spec.
+  </p>
+
+  <p class="fade-in">
+    The idea is not new in spirit — it echoes <a href="https://en.wikipedia.org/wiki/Design_by_contract">Design by Contract</a>, formal methods, and even the RUP's own emphasis on artifacts. What's new is the <strong>executor</strong>. When the reader of your specification is an AI with unlimited patience and zero cognitive fatigue, the cost-benefit equation of detailed specs flips entirely.
+  </p>
+
+  <p class="fade-in">
+    Tools like <strong>GitHub's Spec-Kit</strong>, <strong>AWS Kiro</strong> (an IDE that transforms prompts into structured specs with requirements, design documents, and task plans), and frameworks like <strong>Google's Antigravity</strong> have all embraced this direction in 2025-2026. The pattern is consistent: write a spec, let agents execute, use quality gates to validate.
+  </p>
+
+  <p class="fade-in">
+    Critics — and there are thoughtful ones — argue that SDD risks becoming <em>"Waterfall strikes back"</em>, in Fran&ccedil;ois Zaninotto's memorable phrasing. The concern is that excessive markdown creates a false sense of control while adding overhead that doesn't survive contact with reality.
+  </p>
+
+  <p class="fade-in">
+    This is a legitimate criticism. But it applies to <strong>SDD as practiced naively</strong> — where specs are static documents that age poorly. What if, instead, the specs were living artifacts inside an iterative process, continuously validated and updated by the agents themselves? What if the process that governed those specs was... RUP?
+  </p>
+
+  <!-- SECTION: AIRUP -->
+  <h2 class="fade-in">Enter AIRUP: An AI-First Unified Process</h2>
+
+  <p class="fade-in">
+    This is the core of my thesis. <strong>AIRUP</strong> proposes an <strong>AI-first software development process</strong> in which <strong>AI agents assume the traditional roles of RUP</strong>, automating activities across the entire software engineering lifecycle:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>Requirements analysis</strong> — agents parse business context, stakeholder needs, and constraints to produce structured use cases and requirements specifications.</li>
+    <li><strong>Architecture definition</strong> — agents propose component-based architectures, evaluate tradeoffs, and generate architecture decision records.</li>
+    <li><strong>Modeling</strong> — agents produce UML-equivalent models, domain diagrams, and interaction flows.</li>
+    <li><strong>Code generation</strong> — agents implement against specs, following project conventions and quality standards.</li>
+    <li><strong>Testing</strong> — agents generate and execute test suites, from unit tests to integration scenarios.</li>
+    <li><strong>Deployment</strong> — agents configure pipelines, infrastructure-as-code, and release processes.</li>
+  </ul>
+
+  <p class="fade-in">
+    But the critical innovation is not in the agents themselves — it's in the <strong>governance layer</strong>.
+  </p>
+
+  <div class="callout fade-in">
+    <h4>The AI Governor</h4>
+    <p>
+      AIRUP introduces a new role that doesn't exist in the original RUP: the <strong>AI Governor</strong>. This is a central agent responsible for <strong>controlling cost, preventing decision loops, and ensuring alignment with business value</strong>.
+    </p>
+    <p>
+      In multi-agent systems, a well-known failure mode is the "infinite refinement loop" — where agents keep improving artifacts beyond the point of diminishing returns. The Governor acts as a circuit breaker: it monitors token consumption, tracks iteration counts, evaluates whether quality gates are met, and decides when to stop.
+    </p>
+  </div>
+
+  <p class="fade-in">
+    Think of the AI Governor as a blend of a project manager, a cost controller, and a technical lead — but one that operates at machine speed and with perfect memory of every decision made in the process.
+  </p>
+
+  <!-- SECTION: ROLE MAPPING -->
+  <h2 class="fade-in">Mapping RUP Roles to AI Agents</h2>
+
+  <p class="fade-in">
+    One of the most interesting exercises in AIRUP is mapping the original RUP roles to multi-agent capabilities. Here's a simplified view:
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>RUP Role</th>
+        <th>AIRUP Agent</th>
+        <th>Key Responsibility</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Business Analyst</td>
+        <td class="role-agent">@business-analyst</td>
+        <td>Context analysis, stakeholder mapping, problem framing</td>
+      </tr>
+      <tr>
+        <td>Requirements Specifier</td>
+        <td class="role-agent">@requirements</td>
+        <td>Use cases, functional/non-functional requirements, SDD specs</td>
+      </tr>
+      <tr>
+        <td>Software Architect</td>
+        <td class="role-agent">@architect</td>
+        <td>Architecture decisions, component design, tech stack evaluation</td>
+      </tr>
+      <tr>
+        <td>Developer</td>
+        <td class="role-agent">@implementer</td>
+        <td>Code generation, TDD cycles, refactoring</td>
+      </tr>
+      <tr>
+        <td>Tester</td>
+        <td class="role-agent">@tester</td>
+        <td>Test plans, test generation, quality validation</td>
+      </tr>
+      <tr>
+        <td>Deployment Manager</td>
+        <td class="role-agent">@deployer</td>
+        <td>CI/CD pipelines, infrastructure, release management</td>
+      </tr>
+      <tr>
+        <td><em>(New Role)</em></td>
+        <td class="role-agent">@governor</td>
+        <td>Cost control, loop prevention, business value alignment</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    Each agent operates within the boundaries of its role, produces artifacts that feed into the next phase, and is subject to <strong>quality gates</strong> — just like in the original RUP. The difference is that an agent can produce a 40-page requirements specification in minutes, not weeks. It can generate and execute 200 test cases without complaining about "boring work."
+  </p>
+
+  <!-- SECTION: PHASES -->
+  <h2 class="fade-in">The Four Phases, Reimagined</h2>
+
+  <p class="fade-in">
+    AIRUP preserves RUP's four-phase lifecycle, but the dynamics change dramatically when agents are the executors:
+  </p>
+
+  <div class="diagram fade-in">
+    <div class="diagram-title">AIRUP Process Phases</div>
+    <div class="phase-flow">
+      <div class="phase-box">Inception</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Elaboration</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Construction</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Transition</div>
+    </div>
+  </div>
+
+  <h3 class="fade-in">Inception: From Vague Idea to Scoped Problem</h3>
+  <p class="fade-in">
+    The human provides a business problem. The <strong>@business-analyst</strong> agent structures it into a problem statement, identifies stakeholders, and maps pain points. The <strong>@requirements</strong> agent derives initial use cases. The <strong>@governor</strong> evaluates feasibility and cost. Output: a scoped vision document and a risk assessment. <em>Time: minutes, not weeks.</em>
+  </p>
+
+  <h3 class="fade-in">Elaboration: Architecture and Risk Mitigation</h3>
+  <p class="fade-in">
+    The <strong>@architect</strong> agent proposes a component-based architecture, produces decision records, and identifies technical risks. The <strong>@implementer</strong> builds an executable architecture prototype. The <strong>@tester</strong> validates architecturally significant scenarios. The <strong>@governor</strong> monitors whether the team is over-engineering or under-investing in risk mitigation.
+  </p>
+
+  <h3 class="fade-in">Construction: Iterative Build with TDD</h3>
+  <p class="fade-in">
+    This is where Specification-Driven Development shines. Each construction iteration follows a <strong>spec &rarr; test &rarr; implement &rarr; validate</strong> cycle. The <strong>@implementer</strong> writes code against specs. The <strong>@tester</strong> generates and runs tests. The <strong>@architect</strong> reviews for architectural drift. The <strong>@governor</strong> tracks progress, cost, and quality metrics per iteration.
+  </p>
+
+  <h3 class="fade-in">Transition: Deployment and Validation</h3>
+  <p class="fade-in">
+    The <strong>@deployer</strong> agent configures CI/CD pipelines, generates infrastructure-as-code, and manages the release process. The <strong>@tester</strong> runs acceptance tests. The human validates the final product against business objectives.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: WHY NOW -->
+  <h2 class="fade-in">Why Now? The Convergence of Three Trends</h2>
+
+  <p class="fade-in">
+    AIRUP isn't a theoretical exercise disconnected from the real world. Three converging trends make it timely:
+  </p>
+
+  <p class="fade-in">
+    <strong>1. Multi-agent frameworks are maturing.</strong> LangGraph, CrewAI, AutoGen, and OpenAI's Swarm have demonstrated that multi-agent orchestration is not only possible but increasingly reliable. The "agent as worker" pattern — where each agent has a role, tools, and boundaries — maps naturally to RUP's role-based structure.
+  </p>
+
+  <p class="fade-in">
+    <strong>2. SDD is gaining traction (and criticism).</strong> The industry's experiments with specification-driven workflows — from Kiro to GitHub's spec-kit — are generating real-world evidence about what works and what doesn't. AIRUP can learn from these experiments and address the known failure modes (static specs, over-documentation) by embedding specs within an iterative, phase-gated process.
+  </p>
+
+  <p class="fade-in">
+    <strong>3. The cost problem is real.</strong> Multi-agent pipelines are expensive. Without governance, agents waste tokens on unnecessary iterations, over-engineered solutions, and circular reasoning. The AI Governor is a direct response to this problem — and it's a contribution that matters regardless of whether the process is RUP-based.
+  </p>
+
+  <!-- SECTION: RESEARCH QUESTION -->
+  <h2 class="fade-in">The Research Question</h2>
+
+  <div class="callout fade-in">
+    <h4>Central Question</h4>
+    <p>
+      <strong>Can a software development process inspired by RUP, executed by AI agents and governed by an AI Governor, reduce coordination and cost problems in multi-agent software development pipelines?</strong>
+    </p>
+  </div>
+
+  <p class="fade-in">
+    This question has three testable dimensions:
+  </p>
+
+  <ol class="fade-in">
+    <li><strong>Coordination</strong> — Does a role-based, phase-gated structure reduce conflicts, redundancies, and miscommunication between agents compared to unstructured multi-agent pipelines?</li>
+    <li><strong>Cost</strong> — Does the AI Governor's oversight reduce token consumption and iteration waste compared to ungoverned pipelines?</li>
+    <li><strong>Quality</strong> — Does the process produce artifacts and code that meet defined quality standards more consistently than ad-hoc agent workflows?</li>
+  </ol>
+
+  <hr class="separator">
+
+  <!-- SECTION: WHAT THIS IS NOT -->
+  <h2 class="fade-in">What AIRUP Is Not</h2>
+
+  <p class="fade-in">
+    Let me be clear about what I'm <em>not</em> proposing:
+  </p>
+
+  <p class="fade-in">
+    <strong>This is not "bring back waterfall."</strong> RUP was always iterative and incremental. The "heavy waterfall" reputation came from bad implementations, not from the process itself. AIRUP preserves the iterative core — each phase contains multiple iterations, and agents continuously refine artifacts.
+  </p>
+
+  <p class="fade-in">
+    <strong>This is not "replace developers."</strong> The human remains the ultimate decision-maker. The AI Governor reports to a human. Quality gates require human approval at key milestones. Agents propose — humans dispose.
+  </p>
+
+  <p class="fade-in">
+    <strong>This is not "all software should use AIRUP."</strong> A weekend hack doesn't need a formal process. AIRUP targets <strong>systems where coordination, traceability, and governance matter</strong> — enterprise software, regulated industries, critical infrastructure.
+  </p>
+
+  <!-- SECTION: WHAT'S NEXT -->
+  <h2 class="fade-in">What's Coming Next</h2>
+
+  <p class="fade-in">
+    This post is the opening statement. In the upcoming posts on <strong>Brave New IA World</strong>, I'll dive deeper into:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>The AI Governor pattern</strong> — how to implement cost control and loop detection in multi-agent systems</li>
+    <li><strong>SDD meets RUP</strong> — a detailed comparison of specification-driven approaches and how they map to RUP artifacts</li>
+    <li><strong>Benchmarking AIRUP</strong> — experimental design for comparing AIRUP against unstructured multi-agent pipelines</li>
+    <li><strong>Practical implementation</strong> — building a working AIRUP prototype with real agents and real projects</li>
+    <li><strong>The economics of AI-driven development</strong> — token costs, latency, and the real price of formal processes executed by machines</li>
+  </ul>
+
+  <hr class="separator">
+
+  <!-- SECTION: CLOSING -->
+  <p class="fade-in">
+    Twenty-five years ago, we decided that RUP was too much process for too little patience. We weren't wrong — we were just the wrong species for the job. AI agents don't get bored. They don't skip documentation because it's Friday afternoon. They don't cut corners on test coverage because the sprint is ending.
+  </p>
+
+  <p class="fade-in">
+    Maybe it's time to give that process another chance — with better executors.
+  </p>
+
+  <blockquote class="fade-in">
+    "The best process is the one that gets followed. And an AI agent will follow it every single time."
+  </blockquote>
+
+  <!-- TAGS -->
+  <div class="tags fade-in">
+    <span>AI Agents</span>
+    <span>RUP</span>
+    <span>AIRUP</span>
+    <span>SDD</span>
+    <span>Multi-Agent Systems</span>
+    <span>Software Engineering</span>
+    <span>Master's Thesis</span>
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="author-card fade-in">
+    <div class="author-avatar">RC</div>
+    <div class="author-info">
+      <h4>Ricardo Costa</h4>
+      <p>Software engineer exploring the intersection of classical software processes and AI-driven development. Currently pursuing a master's degree researching AIRUP — an AI-first approach to the Rational Unified Process.</p>
+    </div>
+  </div>
+
+</article>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>Brave New IA World &mdash; by Ricardo Costa</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

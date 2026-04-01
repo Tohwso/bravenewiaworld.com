@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brave New IA World — Software Engineering in the Age of AI</title>
+<meta name="description" content="A blog about software engineering in the age of AI agents. Exploring how classical processes, multi-agent systems, and specification-driven development are reshaping how we build software.">
+<meta name="author" content="Ricardo Costa">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Brave New IA World">
+<meta property="og:description" content="Software Engineering in the Age of AI Agents. A blog by Ricardo Costa.">
+<meta property="og:site_name" content="Brave New IA World">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Brave New IA World">
+<meta name="twitter:description" content="Software Engineering in the Age of AI Agents.">
+<link rel="canonical" href="https://bravenewiaworld.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="blog-header">
+  <a href="/" class="blog-brand">Brave New IA World</a>
+  <nav class="blog-nav">
+    <a href="/">Home</a>
+    <a href="#posts">Archive</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero-landing">
+  <h1 class="fade-in">Brave New<br><span class="highlight">IA World</span></h1>
+  <p class="tagline fade-in stagger-1">Software Engineering in the Age of AI Agents.<br>Classical processes. Multi-agent systems. The future of how we build.</p>
+  <p class="author-line fade-in stagger-2">A blog by Ricardo Costa</p>
+</section>
+
+<!-- POSTS -->
+<section class="posts-section" id="posts">
+  <h2>Latest Posts</h2>
+
+  <a href="posts/001-can-ai-resurrect-rup.html" class="post-card fade-in">
+    <div class="post-number">#001</div>
+    <h3>Can AI Resurrect the Rational Unified Process?</h3>
+    <p>What if the methodology we abandoned for being "too heavy for humans" was actually perfect — just waiting for non-human executors? Introducing AIRUP and the AI Governor.</p>
+    <div class="post-meta">July 2026 &middot; 10 min read</div>
+  </a>
+
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>Brave New IA World &mdash; by Ricardo Costa</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
