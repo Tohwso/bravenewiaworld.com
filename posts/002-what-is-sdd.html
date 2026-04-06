@@ -114,7 +114,7 @@
   <h2 class="fade-in">Anatomy of an SDD Workflow</h2>
 
   <p class="fade-in">
-    Most SDD implementations — whether it's <strong>AWS Kiro</strong>, <strong>GitHub Spec-Kit</strong>, or internal frameworks at companies like PicPay — follow a three-phase structure:
+    Most SDD implementations — whether it's <strong>AWS Kiro</strong>, <strong>GitHub Spec-Kit</strong>, or internal frameworks at companies — follow a three-phase structure:
   </p>
 
   <div class="diagram fade-in">
@@ -212,6 +212,18 @@
 
   <p class="fade-in">
     The criticism applies perfectly to <strong>static SDD</strong> — where you write a spec once, throw it over the wall to agents, and pray. That <em>is</em> waterfall. But nobody said specs have to be static. What if the spec is a <strong>living document inside an iterative process</strong>? What if agents update the spec as they discover edge cases? What if the spec evolves through phases — getting more detailed as uncertainty decreases?
+  </p>
+
+  <p class="fade-in">
+    And here's the real game-changer that most critics miss: <strong>SDD specs live in the repository, right next to the code</strong>. Not in a Confluence page that nobody updates. Not in a Google Doc that's three versions behind. In the actual git repo, versioned, diffable, reviewable in pull requests.
+  </p>
+
+  <p class="fade-in">
+    This changes the social contract around documentation entirely. Think about what happened when we put tests next to the code: committing a change that breaks a test became an obvious mistake — the CI pipeline screams at you, your PR gets blocked, your colleagues raise an eyebrow. <strong>SDD creates the same dynamic for specifications.</strong> A developer who changes a function's behavior and commits without updating the corresponding spec is making the same kind of mistake as someone who breaks a unit test and pushes anyway. The spec is no longer a bureaucratic artifact that lives in a separate tool — <strong>it's a first-class citizen of the codebase</strong>, subject to the same version control, the same code review, the same CI checks.
+  </p>
+
+  <p class="fade-in">
+    This is the leap. Not just "write specs for AI agents" — but <strong>make specs part of the codebase</strong>, with all the enforcement mechanisms we already have for code quality. The spec becomes as alive as the code, because it <em>is</em> the code's neighbor.
   </p>
 
   <p class="fade-in">
