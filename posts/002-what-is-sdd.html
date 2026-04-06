@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="_97oaFM1mLh87ahif6GDfBCdHq6wlog85WR5xPBgUyk">
+<title>What Is Specification-Driven Development (And Why It Might Save RUP) | Brave New IA World</title>
+<meta name="description" content="SDD explained: what Specification-Driven Development actually is, why it matters for AI agents, how tools like Kiro and GitHub Spec-Kit use it, and why it might be the missing piece to resurrect the Rational Unified Process.">
+<meta name="author" content="Ricardo Costa">
+<meta name="keywords" content="Specification-Driven Development, SDD, AI agents, Kiro, GitHub Spec-Kit, RUP, AIRUP, software engineering, specs, multi-agent, code generation, LLM, structured specs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What Is Specification-Driven Development (And Why It Might Save RUP)">
+<meta property="og:description" content="SDD explained: write the spec first, let AI agents do the rest. How structured specifications are changing software engineering — and why RUP was ahead of its time.">
+<meta property="og:site_name" content="Brave New IA World">
+<meta property="og:url" content="https://bravenewiaworld.com/posts/002-what-is-sdd.html">
+<meta property="og:image" content="https://bravenewiaworld.com/images/og-post-002.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What Is Specification-Driven Development (And Why It Might Save RUP)">
+<meta name="twitter:description" content="SDD explained: write the spec first, let AI agents do the rest. How structured specifications are changing software engineering.">
+<meta name="twitter:image" content="https://bravenewiaworld.com/images/og-post-002.png">
+<meta property="article:published_time" content="2026-04-01">
+<meta property="article:author" content="Ricardo Costa">
+<meta property="article:section" content="Software Engineering">
+<meta property="article:tag" content="SDD">
+<meta property="article:tag" content="Specification-Driven Development">
+<meta property="article:tag" content="AI Agents">
+<meta property="article:tag" content="Kiro">
+<meta property="article:tag" content="RUP">
+<link rel="canonical" href="https://bravenewiaworld.com/posts/002-what-is-sdd.html">
+
+<!-- Structured Data: Article -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "What Is Specification-Driven Development (And Why It Might Save RUP)",
+  "description": "SDD explained: what Specification-Driven Development actually is, why it matters for AI agents, how tools like Kiro and GitHub Spec-Kit use it, and why it might be the missing piece to resurrect the Rational Unified Process.",
+  "url": "https://bravenewiaworld.com/posts/002-what-is-sdd.html",
+  "datePublished": "2026-04-01",
+  "dateModified": "2026-04-01",
+  "author": {
+    "@type": "Person",
+    "name": "Ricardo Costa"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Brave New IA World"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://bravenewiaworld.com/posts/002-what-is-sdd.html"
+  },
+  "keywords": ["SDD", "Specification-Driven Development", "AI agents", "Kiro", "GitHub Spec-Kit", "RUP", "AIRUP", "software engineering"],
+  "articleSection": "Software Engineering",
+  "wordCount": 1500,
+  "timeRequired": "PT5M"
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="blog-header">
+  <a href="/" class="blog-brand">Brave New IA World</a>
+  <nav class="blog-nav">
+    <a href="/">Home</a>
+    <a href="/#posts">Archive</a>
+    <span class="tag">Post #002</span>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero-post">
+  <div class="hero-label">Post #002 &mdash; The SDD Series</div>
+  <h1>What Is <span class="highlight">SDD</span><br>And Why It Might Save RUP</h1>
+  <p class="hero-subtitle">Write the spec. Let the machines do the boring part. What could possibly go wrong?</p>
+  <div class="hero-meta">
+    <span>Ricardo Costa</span>
+    <span class="dot"></span>
+    <span>~5 min read</span>
+    <span class="dot"></span>
+    <time datetime="2026-04-01">April 2026</time>
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<article class="article">
+
+  <p class="lead fade-in">
+    In the <a href="001-can-ai-resurrect-rup.html">first post</a>, I introduced AIRUP — my thesis that AI agents can resurrect the Rational Unified Process. I mentioned something called <strong>Specification-Driven Development</strong> as a key ingredient. Several people asked: "OK, but what <em>is</em> SDD exactly?" Fair. Let's fix that.
+  </p>
+
+  <!-- SECTION: THE PITCH -->
+  <h2 class="fade-in">The Elevator Pitch</h2>
+
+  <p class="fade-in">
+    Specification-Driven Development is a paradigm where you <strong>write a structured specification before any code exists</strong>, and then AI agents execute against that specification. The spec is the source of truth. The code is a derivative.
+  </p>
+
+  <p class="fade-in">
+    If that sounds like "just writing requirements before coding" — congratulations, you've been doing engineering since the 1960s. The difference is the <strong>audience</strong>. Traditional requirements were written for humans who would interpret them, argue about them in meetings, and then ignore half of them. SDD specs are written for <strong>AI agents who will execute them literally, completely, and without passive-aggressive Slack messages</strong>.
+  </p>
+
+  <p class="fade-in">
+    This changes everything about how you write them.
+  </p>
+
+  <!-- SECTION: ANATOMY -->
+  <h2 class="fade-in">Anatomy of an SDD Workflow</h2>
+
+  <p class="fade-in">
+    Most SDD implementations — whether it's <strong>AWS Kiro</strong>, <strong>GitHub Spec-Kit</strong>, or internal frameworks at companies like PicPay — follow a three-phase structure:
+  </p>
+
+  <div class="diagram fade-in">
+    <div class="diagram-title">The SDD Pipeline</div>
+    <div class="phase-flow">
+      <div class="phase-box">Requirements</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Design</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Tasks</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Code</div>
+    </div>
+  </div>
+
+  <p class="fade-in">
+    <strong>Phase 1: Requirements.</strong> You describe what you want. User stories, acceptance criteria, edge cases, constraints. In Kiro, this produces a <code>requirements.md</code>. The spec uses structured notation — not "as a user I want…" handwaving, but <strong>precise, testable statements</strong> that an agent can parse unambiguously.
+  </p>
+
+  <p class="fade-in">
+    <strong>Phase 2: Design.</strong> An agent (or you) writes the technical architecture: component diagrams, sequence flows, data models, API contracts, error handling strategy. This produces a <code>design.md</code>. The key insight: <strong>the design references the requirements</strong>, creating traceability. Every design decision maps to a requirement.
+  </p>
+
+  <p class="fade-in">
+    <strong>Phase 3: Tasks.</strong> The agent decomposes the design into discrete, executable implementation tasks. Each task is atomic — one clear outcome, one clear validation. This produces a <code>tasks.md</code> that looks like a checklist a robot would love.
+  </p>
+
+  <p class="fade-in">
+    <strong>Phase 4: Code.</strong> The agent executes the tasks. Writes tests first (TDD), then implements, then validates against the original spec. If something doesn't match — the spec wins, not the code.
+  </p>
+
+  <!-- SECTION: WHY NOW -->
+  <h2 class="fade-in">Why SDD Works Now (But Wouldn't Have Worked Before)</h2>
+
+  <p class="fade-in">
+    People have been writing specifications since before most of us were born. IEEE 830, formal methods, Design by Contract, Z notation — the graveyard of spec-first approaches is vast and well-populated. So why is SDD different?
+  </p>
+
+  <p class="fade-in">
+    <strong>Because the reader changed.</strong>
+  </p>
+
+  <p class="fade-in">
+    When the spec reader is a human developer, detailed specifications create <em>overhead</em>. The developer reads the spec, builds a mental model, then writes code from that mental model — not from the spec directly. The spec is a lossy intermediary. Worse: maintaining the spec alongside the code is double work that nobody wants to do. So specs rot, diverge, and eventually get abandoned.
+  </p>
+
+  <p class="fade-in">
+    When the spec reader is an <strong>AI agent</strong>, none of those problems exist:
+  </p>
+
+  <ul class="fade-in">
+    <li>The agent has <strong>no cognitive fatigue</strong>. A 200-page spec is as easy to process as a 2-page spec.</li>
+    <li>The agent <strong>executes directly</strong> from the spec. There's no lossy mental model in between.</li>
+    <li>The agent can <strong>validate its own output</strong> against the spec at every step.</li>
+    <li>The agent <strong>never complains</strong> that the spec is "too detailed." (A sentence I've never successfully said to a human developer.)</li>
+  </ul>
+
+  <blockquote class="fade-in">
+    "The problem with specifications was never the specifications. It was that humans are bad at following them and worse at maintaining them."
+  </blockquote>
+
+  <!-- SECTION: REAL WORLD -->
+  <h2 class="fade-in">SDD in the Wild</h2>
+
+  <p class="fade-in">
+    This isn't theoretical. SDD is already being used in production by major players:
+  </p>
+
+  <p class="fade-in">
+    <strong>AWS Kiro</strong> — An agentic IDE that generates three-phase specs (requirements, design, tasks) from natural language descriptions. It uses Claude models under the hood and tracks task completion in real time. Kiro explicitly positions itself around the idea that <em>"specs are the bridge between intent and implementation."</em>
+  </p>
+
+  <p class="fade-in">
+    <strong>GitHub Spec-Kit</strong> — An open-source toolkit (82K+ stars) that provides templates, validation tools, and agent integration for spec-driven workflows. It standardizes how specs are written so that different AI tools can consume them interoperably.
+  </p>
+
+  <p class="fade-in">
+    <strong>Google Antigravity</strong> — Google DeepMind's AI-first development environment, which uses <code>agents.md</code> and <code>skills.md</code> files to define multi-agent workflows driven by specifications. Multiple agents (PM, Engineer, QA, DevOps) operate in parallel, each consuming the spec from their role's perspective.
+  </p>
+
+  <p class="fade-in">
+    The pattern across all of them is identical: <strong>spec &rarr; agents &rarr; quality gates &rarr; code</strong>.
+  </p>
+
+  <!-- SECTION: CRITICISM -->
+  <h2 class="fade-in">The Criticism (And Why It's Half Right)</h2>
+
+  <p class="fade-in">
+    SDD has vocal critics, and they make good points. Fran&ccedil;ois Zaninotto from Marmelab has called it <em>"Waterfall Strikes Back"</em> — arguing that writing lengthy markdown specs before coding is just waterfall with a trendy name. Martin Fowler's team at Thoughtworks has noted that static specs create a <em>"false sense of control"</em> that breaks down on contact with reality.
+  </p>
+
+  <p class="fade-in">
+    They're <strong>half right</strong>. Here's the half they're missing:
+  </p>
+
+  <p class="fade-in">
+    The criticism applies perfectly to <strong>static SDD</strong> — where you write a spec once, throw it over the wall to agents, and pray. That <em>is</em> waterfall. But nobody said specs have to be static. What if the spec is a <strong>living document inside an iterative process</strong>? What if agents update the spec as they discover edge cases? What if the spec evolves through phases — getting more detailed as uncertainty decreases?
+  </p>
+
+  <p class="fade-in">
+    In other words: what if you put SDD inside an iterative, phase-gated process with built-in feedback loops?
+  </p>
+
+  <p class="fade-in">
+    Like, say... <strong>RUP</strong>?
+  </p>
+
+  <!-- SECTION: THE CONNECTION -->
+  <h2 class="fade-in">The RUP Connection</h2>
+
+  <p class="fade-in">
+    And this is the punchline. RUP already solved the "static spec" problem — <strong>twenty years ago</strong>. RUP's four phases (Inception, Elaboration, Construction, Transition) are designed precisely to evolve artifacts iteratively. Requirements start rough in Inception, get refined in Elaboration, and are continuously validated in Construction. The spec is never "done" — it's progressively detailed.
+  </p>
+
+  <div class="callout fade-in">
+    <h4>SDD + RUP = Iterative Specs</h4>
+    <p>
+      SDD provides the <strong>format</strong> — structured, machine-readable specifications that AI agents can execute.<br>
+      RUP provides the <strong>lifecycle</strong> — an iterative process that evolves those specs through phases with quality gates.<br>
+      Together, they eliminate SDD's biggest weakness (static specs) and RUP's biggest weakness (human fatigue).
+    </p>
+  </div>
+
+  <p class="fade-in">
+    This is exactly what <strong>AIRUP</strong> proposes: take SDD's specification format, embed it in RUP's iterative lifecycle, and let AI agents do the heavy lifting. The <a href="001-can-ai-resurrect-rup.html">AI Governor</a> ensures the specs don't over-inflate, the quality gates ensure they stay honest, and the iterative phases ensure they evolve with reality.
+  </p>
+
+  <hr class="separator">
+
+  <p class="fade-in">
+    SDD is not a silver bullet. It's not even a complete methodology. It's a <strong>format and a workflow pattern</strong> that happens to be exactly what AI agents need to do useful work. The real question is: what process governs those specs?
+  </p>
+
+  <p class="fade-in">
+    My answer — and the core of my thesis — is that the Rational Unified Process, the methodology we discarded for being "too formal," provides the ideal governance structure for specification-driven AI agents. The irony is delicious.
+  </p>
+
+  <blockquote class="fade-in">
+    "SDD is the fuel. RUP is the engine. AI agents are the driver. And the AI Governor makes sure nobody drives off a cliff."
+  </blockquote>
+
+  <p class="fade-in">
+    <strong>Next up:</strong> <em>The AI Governor Pattern</em> — how to prevent multi-agent systems from burning through your budget while debating whether a variable should be called <code>userId</code> or <code>user_id</code>.
+  </p>
+
+  <!-- TAGS -->
+  <div class="tags fade-in">
+    <span>SDD</span>
+    <span>Specification-Driven Development</span>
+    <span>AI Agents</span>
+    <span>RUP</span>
+    <span>AIRUP</span>
+    <span>Kiro</span>
+    <span>GitHub Spec-Kit</span>
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="author-card fade-in">
+    <div class="author-avatar">RC</div>
+    <div class="author-info">
+      <h4>Ricardo Costa</h4>
+      <p>Software engineer exploring the intersection of classical software processes and AI-driven development. Currently pursuing a master's degree researching AIRUP — an AI-first approach to the Rational Unified Process.</p>
+    </div>
+  </div>
+
+</article>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>Brave New IA World &mdash; by Ricardo Costa</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
