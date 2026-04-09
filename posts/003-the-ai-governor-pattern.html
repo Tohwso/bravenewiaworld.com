@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="_97oaFM1mLh87ahif6GDfBCdHq6wlog85WR5xPBgUyk">
+<title>The AI Governor Pattern — Cost Control for Multi-Agent Systems | Brave New IA World</title>
+<meta name="description" content="Multi-agent AI pipelines are powerful but expensive. The AI Governor pattern introduces cost control, loop detection, and tiered model routing to keep AI-driven development economically viable. A deep dive into token economics and governance.">
+<meta name="author" content="Ricardo Costa">
+<meta name="keywords" content="AI Governor, multi-agent systems, token economics, cost control, LLM, AIRUP, RUP, SDD, loop detection, tiered model routing, circuit breaker, AI agents, software engineering">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The AI Governor Pattern — Cost Control for Multi-Agent Systems">
+<meta property="og:description" content="Multi-agent AI pipelines are powerful but expensive. The AI Governor introduces cost control, loop detection, and tiered routing to keep AI development viable.">
+<meta property="og:site_name" content="Brave New IA World">
+<meta property="og:url" content="https://bravenewiaworld.com/posts/003-the-ai-governor-pattern.html">
+<meta property="og:image" content="https://bravenewiaworld.com/images/og-post-003.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The AI Governor Pattern — Cost Control for Multi-Agent Systems">
+<meta name="twitter:description" content="Multi-agent AI pipelines are powerful but expensive. The AI Governor introduces cost control, loop detection, and tiered routing to keep AI development viable.">
+<meta name="twitter:image" content="https://bravenewiaworld.com/images/og-post-003.png">
+<meta property="article:published_time" content="2026-04-10">
+<meta property="article:author" content="Ricardo Costa">
+<meta property="article:section" content="Software Engineering">
+<meta property="article:tag" content="AI Governor">
+<meta property="article:tag" content="Multi-Agent Systems">
+<meta property="article:tag" content="Token Economics">
+<meta property="article:tag" content="Cost Control">
+<meta property="article:tag" content="AIRUP">
+<link rel="canonical" href="https://bravenewiaworld.com/posts/003-the-ai-governor-pattern.html">
+
+<!-- Structured Data: Article -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "The AI Governor Pattern — Cost Control for Multi-Agent Systems",
+  "description": "Multi-agent AI pipelines are powerful but expensive. The AI Governor pattern introduces cost control, loop detection, and tiered model routing to keep AI-driven development economically viable.",
+  "url": "https://bravenewiaworld.com/posts/003-the-ai-governor-pattern.html",
+  "datePublished": "2026-04-10",
+  "dateModified": "2026-04-10",
+  "author": {
+    "@type": "Person",
+    "name": "Ricardo Costa"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Brave New IA World"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://bravenewiaworld.com/posts/003-the-ai-governor-pattern.html"
+  },
+  "keywords": ["AI Governor", "multi-agent systems", "token economics", "cost control", "AIRUP", "RUP", "SDD", "loop detection", "tiered model routing", "circuit breaker"],
+  "articleSection": "Software Engineering",
+  "wordCount": 3200,
+  "timeRequired": "PT12M"
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="blog-header">
+  <a href="/" class="blog-brand">Brave New IA World</a>
+  <nav class="blog-nav">
+    <a href="/">Home</a>
+    <a href="/#posts">Archive</a>
+    <span class="tag">Post #003</span>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero-post">
+  <div class="hero-label">Post #003 &mdash; The AIRUP Series</div>
+  <h1>The <span class="highlight">AI Governor</span> Pattern</h1>
+  <p class="hero-subtitle">Multi-agent systems are powerful. They're also expensive. Meet the role that keeps them from burning through your budget while debating variable names.</p>
+  <div class="hero-meta">
+    <span>Ricardo Costa</span>
+    <span class="dot"></span>
+    <span>~12 min read</span>
+    <span class="dot"></span>
+    <time datetime="2026-04-10">April 2026</time>
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<article class="article">
+
+  <p class="lead fade-in">
+    In the <a href="001-can-ai-resurrect-rup.html">first post</a>, I introduced the AI Governor as "a central agent responsible for controlling cost, preventing decision loops, and ensuring alignment with business value." In the <a href="002-what-is-sdd.html">second post</a>, I hinted that SDD specs generate a <em>lot</em> of tokens. Now it's time to be honest about the elephant in the room: <strong>multi-agent AI pipelines are token-hungry by design, and someone needs to be in charge of the bill.</strong>
+  </p>
+
+  <p class="fade-in">
+    That someone is the AI Governor. This post explains what it does, why it matters, and why the economics of tokens are more interesting &mdash; and less terrifying &mdash; than they appear.
+  </p>
+
+  <!-- SECTION: THE PROBLEM -->
+  <h2 class="fade-in">The Cost Problem Nobody Wants to Talk About</h2>
+
+  <p class="fade-in">
+    Let's start with some uncomfortable math. A typical AIRUP pipeline for a medium-complexity feature might involve:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>Requirements phase:</strong> ~15,000 tokens generated (requirements.md with EARS-format statements, BDD scenarios, boundary mapping)</li>
+    <li><strong>Design phase:</strong> ~20,000 tokens (design decisions, interface contracts, component diagrams, traceability matrices)</li>
+    <li><strong>Task decomposition:</strong> ~10,000 tokens (atomic tasks with cross-references to requirements and design)</li>
+    <li><strong>Code generation:</strong> ~40,000 tokens across multiple files</li>
+    <li><strong>Test generation:</strong> ~25,000 tokens (unit tests, integration tests, edge cases)</li>
+    <li><strong>Review &amp; validation:</strong> ~15,000 tokens per review cycle</li>
+  </ul>
+
+  <p class="fade-in">
+    That's roughly <strong>125,000 tokens of output</strong> for a single feature. But output is only half the story. Each agent needs <strong>context</strong> &mdash; it needs to <em>read</em> the specs, the code, the test results, the review feedback. Context windows in multi-agent systems aren't shared; each agent loads its own. If you have six agents, each reading ~30,000 tokens of context per invocation, and each invoked 3-4 times across the pipeline, you're looking at <strong>500,000-700,000 input tokens per feature</strong>.
+  </p>
+
+  <p class="fade-in">
+    Add a couple of iteration loops (draft &rarr; validate &rarr; feedback &rarr; re-draft) and you can easily hit <strong>one million tokens per feature</strong>.
+  </p>
+
+  <blockquote class="fade-in">
+    "A million tokens sounds terrifying until you realize it costs less than a mediocre lunch. The real question isn't whether you can afford the tokens &mdash; it's whether you're spending them on the right things."
+  </blockquote>
+
+  <!-- SECTION: THE DEFLATION -->
+  <h2 class="fade-in">The Most Important Chart You'll See Today</h2>
+
+  <p class="fade-in">
+    Before we talk about how the Governor controls costs, let's establish a crucial piece of context: <strong>the price of intelligence is collapsing</strong>.
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Model Class</th>
+        <th>Cost per 1M Input Tokens</th>
+        <th>Cumulative Reduction</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Mar 2023</td>
+        <td>GPT-4</td>
+        <td>$30.00</td>
+        <td>&mdash;</td>
+      </tr>
+      <tr>
+        <td>Nov 2023</td>
+        <td>GPT-4 Turbo</td>
+        <td>$10.00</td>
+        <td>-67%</td>
+      </tr>
+      <tr>
+        <td>May 2024</td>
+        <td>GPT-4o</td>
+        <td>$5.00</td>
+        <td>-83%</td>
+      </tr>
+      <tr>
+        <td>Jan 2025</td>
+        <td>DeepSeek V3</td>
+        <td>$0.27</td>
+        <td>-99.1%</td>
+      </tr>
+      <tr>
+        <td>Jul 2025</td>
+        <td>Gemini 2.5 Flash</td>
+        <td>$0.15</td>
+        <td>-99.5%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    Read that last column again. In roughly two years, the cost of frontier-class intelligence dropped by <strong>99.5%</strong>. That million-token feature pipeline? At March 2023 prices, it would cost ~$30. At today's prices, it costs <strong>less than $0.50</strong>. By 2027, it might cost pennies.
+  </p>
+
+  <p class="fade-in">
+    This isn't wishful extrapolation. It's driven by structural forces: open-weight models (DeepSeek, Llama, Mistral) commoditizing intelligence, hardware competition (NVIDIA vs. AMD vs. custom silicon), and fierce commercial competition among OpenAI, Google, Anthropic, and a dozen others. The deflationary pressure is <em>accelerating</em>, not slowing down.
+  </p>
+
+  <div class="callout fade-in">
+    <h4>The Storage Analogy</h4>
+    <p>
+      In 2005, storing 1 TB of data cost thousands of dollars. Companies built elaborate data retention policies, archival strategies, and cleanup scripts to manage storage costs. Today, 1 TB costs a few dollars per month &mdash; and nobody writes cleanup scripts for cost reasons anymore.
+    </p>
+    <p>
+      <strong>Token costs are on the same trajectory.</strong> The governance strategies we build today around cost will shift to latency and quality optimization tomorrow &mdash; but the <em>architecture</em> of having a Governor remains valuable regardless of what it's optimizing for.
+    </p>
+  </div>
+
+  <p class="fade-in">
+    So if token costs are plummeting, why does the AI Governor even care about cost? Because <strong>"cheap" and "zero" are different things</strong>. Even at $0.15 per million tokens, an ungoverned pipeline can burn through 50 million tokens debugging a circular logic problem that a human could resolve in five minutes. Cheap multiplied by waste is still waste. The Governor's job isn't to prevent spending &mdash; it's to prevent <em>spending without progress</em>.
+  </p>
+
+  <!-- SECTION: FIVE STRATEGIES -->
+  <h2 class="fade-in">Five Strategies the Governor Uses</h2>
+
+  <p class="fade-in">
+    The AI Governor isn't a single algorithm. It's a set of <strong>governance strategies</strong> that operate at different levels of the pipeline. Here are the five core patterns:
+  </p>
+
+  <h3 class="fade-in">1. Tiered Model Routing</h3>
+
+  <p class="fade-in">
+    Not every task in a software development pipeline requires the same level of intelligence. Parsing a YAML file doesn't need GPT-4o. Deciding whether to use event sourcing vs. CRUD does.
+  </p>
+
+  <p class="fade-in">
+    The Governor maintains a <strong>task-to-model mapping</strong> that routes each sub-task to the cheapest model capable of handling it:
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>Task Type</th>
+        <th>Model Tier</th>
+        <th>Relative Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Spec parsing, field extraction, format validation</td>
+        <td class="role-agent">Flash / Haiku</td>
+        <td>$0.01</td>
+      </tr>
+      <tr>
+        <td>Boilerplate code generation, test scaffolding</td>
+        <td class="role-agent">Sonnet / GPT-4o-mini</td>
+        <td>$0.05</td>
+      </tr>
+      <tr>
+        <td>Complex architecture decisions, nuanced review</td>
+        <td class="role-agent">Opus / GPT-4o / o3</td>
+        <td>$0.50</td>
+      </tr>
+      <tr>
+        <td>Format checking, ID uniqueness, traceability</td>
+        <td class="role-agent">Zero LLM (deterministic)</td>
+        <td>$0.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    In practice, <strong>80% of pipeline tasks can run on models that cost 10-50x less</strong> than the frontier tier. The Governor's routing logic is simple: start with the cheapest capable model, escalate only if confidence is below a threshold or the task fails validation. This single strategy can reduce total pipeline cost by 60-70%.
+  </p>
+
+  <h3 class="fade-in">2. Contextual Pruning</h3>
+
+  <p class="fade-in">
+    When the <code>@tester</code> agent needs to generate unit tests, does it need to read the full design document? The stakeholder analysis? The deployment topology? No. It needs the interface contracts, the validation rules, and the error codes. Everything else is noise.
+  </p>
+
+  <p class="fade-in">
+    The Governor performs <strong>role-aware context selection</strong>: for each agent invocation, it assembles a minimal context window containing only the artifacts relevant to that agent's task. This is essentially <strong>RAG applied to the process itself</strong> &mdash; not to external knowledge, but to the pipeline's own specification artifacts.
+  </p>
+
+  <p class="fade-in">
+    A secondary technique is <strong>progressive summarization</strong>. As each phase completes, the Governor generates a compact summary (500-1,000 tokens) that captures the key decisions and outcomes. Downstream agents receive the summary instead of the full document, unless they explicitly need details. A 20,000-token design document becomes a 800-token decision log &mdash; a 96% reduction in context cost.
+  </p>
+
+  <h3 class="fade-in">3. Decision Caching</h3>
+
+  <p class="fade-in">
+    Once the architect decides "use PostgreSQL with event sourcing," that decision should never be re-derived. It becomes a <strong>fact</strong> in the pipeline's shared state &mdash; a few tokens of declaration instead of hundreds of tokens of analysis.
+  </p>
+
+  <p class="fade-in">
+    The Governor maintains a <strong>decision log</strong>: a growing list of resolved decisions, each with an ID, a timestamp, the deciding agent, and the one-line conclusion. When any agent's context is assembled, the relevant decisions are injected as facts, not questions. This prevents the most insidious form of token waste: <strong>agents re-deriving conclusions that were already reached three phases ago</strong>.
+  </p>
+
+  <h3 class="fade-in">4. Deterministic Validation Gates</h3>
+
+  <p class="fade-in">
+    A significant portion of what today passes through LLMs can be validated with plain code. Consider these checks:
+  </p>
+
+  <ul class="fade-in">
+    <li>Are all requirement IDs unique? &rarr; <strong>regex + set</strong></li>
+    <li>Does every design decision reference at least one requirement? &rarr; <strong>cross-reference check</strong></li>
+    <li>Do all tasks map back to a design decision? &rarr; <strong>graph traversal</strong></li>
+    <li>Is the spec in valid EARS notation? &rarr; <strong>grammar parser</strong></li>
+    <li>Do generated tests compile? &rarr; <strong>compiler invocation</strong></li>
+  </ul>
+
+  <p class="fade-in">
+    Each of these checks, done deterministically, <strong>costs zero tokens</strong>. Every validation that doesn't require an LLM is a validation that saves money, runs faster, and produces deterministic (reproducible) results. The Governor enforces a policy: <strong>deterministic first, LLM only when judgment is required</strong>.
+  </p>
+
+  <p class="fade-in">
+    In my experiments, roughly 40% of validation steps that initially used an LLM could be replaced with deterministic checks. That's 40% fewer LLM calls in the validation pipeline &mdash; for free.
+  </p>
+
+  <h3 class="fade-in">5. Circuit Breaker &amp; Early Termination</h3>
+
+  <p class="fade-in">
+    This is the Governor's most critical safety mechanism. Multi-agent systems have a well-known failure mode: the <strong>infinite refinement loop</strong>. Agent A produces output. Agent B reviews it and requests changes. Agent A revises. Agent B finds new issues. Repeat until heat death of the universe &mdash; or until you've burned through $50 debating whether a function parameter should be called <code>maxRetries</code> or <code>retryLimit</code>.
+  </p>
+
+  <p class="fade-in">
+    The Governor implements a <strong>circuit breaker pattern</strong> borrowed from distributed systems:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>Iteration cap:</strong> no agent loop runs more than N iterations (default: 3-5) without human intervention</li>
+    <li><strong>Convergence detection:</strong> if the diff between consecutive outputs drops below a threshold, the loop is "converging on noise" and gets terminated</li>
+    <li><strong>Cost ceiling:</strong> a hard budget cap per feature, per phase, or per session &mdash; if reached, the Governor pauses and escalates to the human</li>
+    <li><strong>Progress tracking:</strong> each iteration must reduce the number of failing quality gates; if the count stalls or increases, the circuit breaks</li>
+  </ul>
+
+  <blockquote class="fade-in">
+    "The most expensive token is the one spent on a problem that needs a five-second human decision, not a five-thousand-token agent debate."
+  </blockquote>
+
+  <p class="fade-in">
+    The circuit breaker embodies a deeper philosophical point: <strong>the Governor is not trying to eliminate human involvement</strong>. It's trying to invoke humans at the moments where human judgment has the highest leverage &mdash; and keep machines working on everything else.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: LANGUAGE -->
+  <h2 class="fade-in">Should We Invent a Language Only AI Understands?</h2>
+
+  <p class="fade-in">
+    A question I keep encountering when discussing token economics: <em>"If tokens are the cost driver, why not compress the specs into a compact format that only AI agents read? A binary DSL. A symbolic notation. Something 10x denser than markdown."</em>
+  </p>
+
+  <p class="fade-in">
+    It's a logical question with a seductive answer. And I think it's the <strong>wrong direction</strong>. Here's why.
+  </p>
+
+  <p class="fade-in">
+    <strong>SDD's core value proposition is human-readability.</strong> The entire point of specifications &mdash; as I argued in <a href="002-what-is-sdd.html">the SDD post</a> &mdash; is that they create a <em>contract</em> between humans and machines. Specs live in the repository, get reviewed in pull requests, and serve as the authoritative description of what the system should do. If only machines can read them, you've lost the contract. You've created a black box that happens to be made of text instead of weights.
+  </p>
+
+  <p class="fade-in">
+    <strong>It solves the wrong problem.</strong> Token costs are dropping at 90%+ per year. A DSL that takes two years to design, standardize, and gain adoption would launch into a world where the problem it solves no longer exists. You'd be building an archival strategy for storage in 2026 &mdash; solving yesterday's constraint with yesterday's thinking.
+  </p>
+
+  <p class="fade-in">
+    <strong>We tried this before. It was called UML.</strong> The Unified Modeling Language was, in many ways, an attempt to create a formal, compact, machine-processable specification language. It had CASE tools, round-trip engineering, code generation. And it collapsed under its own complexity because humans found it too hard to maintain alongside code. An AI-only DSL would suffer the same fate &mdash; not because AI can't handle complexity, but because <strong>humans need to validate what AI produces</strong>, and they can't validate what they can't read.
+  </p>
+
+  <div class="callout fade-in">
+    <h4>The Hybrid Middle Ground</h4>
+    <p>
+      There is a pragmatic compromise: <strong>markdown with structured frontmatter</strong>. The body of the spec stays in natural language &mdash; human-readable, reviewable, living in git. But the header contains structured metadata (IDs, types, references, status) that agents parse deterministically, without spending tokens on interpretation.
+    </p>
+    <p>
+      This is roughly what the <strong>TOON format</strong> and Kiro's spec structure already do. It's not sexy, but it works: you get the readability of prose with the parsability of data.
+    </p>
+  </div>
+
+  <p class="fade-in">
+    The correct response to "specs use too many tokens" isn't to change the language &mdash; it's to change the <strong>process</strong>. Which is exactly what the Governor does: not fewer words, but <strong>fewer unnecessary readings</strong> of those words.
+  </p>
+
+  <!-- SECTION: TOMORROW -->
+  <h2 class="fade-in">The Governor of Tomorrow</h2>
+
+  <p class="fade-in">
+    Here's my thesis about the future, and I'll state it plainly:
+  </p>
+
+  <blockquote class="fade-in">
+    "In 18-24 months, the cost of tokens will be as irrelevant as the cost of disk storage is today. The Governor's role will shift from cost optimization to <strong>latency optimization</strong> and <strong>quality maximization</strong>. But the architecture &mdash; the governance layer, the routing logic, the circuit breakers &mdash; will remain identical."
+  </blockquote>
+
+  <p class="fade-in">
+    Think about what this means for AIRUP:
+  </p>
+
+  <p class="fade-in">
+    <strong>Today, the Governor asks:</strong> "Can I run this task on a cheaper model?" Tomorrow, it asks: "Can I run this task on a <em>faster</em> model?" The routing table doesn't change &mdash; only the optimization axis.
+  </p>
+
+  <p class="fade-in">
+    <strong>Today, the circuit breaker fires on cost ceilings.</strong> Tomorrow, it fires on latency budgets: "This feature needs to be specced, built, and tested in 30 minutes. We've spent 20 minutes on the design phase. Time to converge."
+  </p>
+
+  <p class="fade-in">
+    <strong>Today, contextual pruning saves money.</strong> Tomorrow, it saves time &mdash; shorter contexts mean faster inference, which means faster pipelines.
+  </p>
+
+  <p class="fade-in">
+    The Governor is not a cost-cutting tool. It's a <strong>resource optimization layer</strong> that happens to optimize for cost right now because that's today's binding constraint. When the constraint shifts &mdash; and it will &mdash; the Governor shifts with it.
+  </p>
+
+  <!-- SECTION: RUP -->
+  <h2 class="fade-in">Why RUP Needs a Governor (And Agile Doesn't)</h2>
+
+  <p class="fade-in">
+    You might wonder: doesn't every multi-agent system need governance? Why is this specifically an AIRUP thing?
+  </p>
+
+  <p class="fade-in">
+    Fair question. Every multi-agent system benefits from governance. But <strong>AIRUP needs it more</strong> because of the process's inherent structure:
+  </p>
+
+  <p class="fade-in">
+    <strong>RUP has more artifacts.</strong> Nine disciplines, each producing documents, models, and specifications. That's a lot of tokens. An agile pipeline with a single user story and a test file generates orders of magnitude less context than a full RUP iteration with requirements specs, architecture documents, and traceability matrices.
+  </p>
+
+  <p class="fade-in">
+    <strong>RUP has more roles.</strong> The original RUP defines over 30 roles. Even AIRUP's simplified mapping has 6-8 agents. More agents means more context duplication, more inter-agent communication, and more opportunities for the kind of circular debates that burn tokens without progress.
+  </p>
+
+  <p class="fade-in">
+    <strong>RUP has more phases.</strong> Four phases with multiple iterations each. The specification artifacts evolve across phases &mdash; getting more detailed from Inception through Construction. Without governance, agents will re-read and re-process earlier-phase artifacts at full fidelity even when summaries would suffice.
+  </p>
+
+  <p class="fade-in">
+    In short: <strong>the more structured the process, the more it benefits from governance</strong>. A two-person startup vibe-coding a prototype doesn't need a Governor. An enterprise building a regulated financial system with full traceability absolutely does.
+  </p>
+
+  <p class="fade-in">
+    This is also, incidentally, why AIRUP doesn't compete with agile for small projects. AIRUP is designed for contexts where the overhead of governance is dwarfed by the risk of <em>not</em> having it.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: ARCHITECTURE -->
+  <h2 class="fade-in">Architectural Sketch</h2>
+
+  <p class="fade-in">
+    For those who think in systems, here's a simplified view of how the Governor fits into the AIRUP pipeline:
+  </p>
+
+  <div class="diagram fade-in">
+    <div class="diagram-title">AI Governor &mdash; Governance Layer</div>
+    <div class="phase-flow">
+      <div class="phase-box">Human<br><small style="color:var(--text-dim);font-size:11px;">Intent &amp; Decisions</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box" style="border-color:var(--accent);background:rgba(108,99,255,0.08);">Governor<br><small style="color:var(--text-dim);font-size:11px;">Route &middot; Monitor &middot; Break</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Agents<br><small style="color:var(--text-dim);font-size:11px;">Execute &amp; Produce</small></div>
+    </div>
+  </div>
+
+  <p class="fade-in">
+    The Governor sits <strong>between the human and the agents</strong>. It doesn't do the work &mdash; it orchestrates, monitors, and intervenes. Every agent request passes through the Governor, which:
+  </p>
+
+  <ol class="fade-in">
+    <li><strong>Selects the model tier</strong> for the task (routing)</li>
+    <li><strong>Assembles the minimal context</strong> for the agent (pruning)</li>
+    <li><strong>Injects cached decisions</strong> as facts (caching)</li>
+    <li><strong>Runs deterministic validations</strong> before and after the LLM call (gates)</li>
+    <li><strong>Evaluates the output</strong> against convergence criteria (circuit breaker)</li>
+    <li><strong>Escalates to the human</strong> when needed (early termination)</li>
+  </ol>
+
+  <p class="fade-in">
+    The Governor also maintains a <strong>cost ledger</strong> &mdash; a running tally of tokens consumed per phase, per agent, per feature. This ledger is visible to the human at all times, providing transparency into where the budget is going. In my experiments, just <em>making the cost visible</em> changed behavior: agents that "knew" their cost was being tracked produced more concise outputs. Whether that's anthropomorphism or prompt engineering is a question I'll leave to the philosophers.
+  </p>
+
+  <!-- SECTION: CLOSING -->
+  <h2 class="fade-in">The Governor Is Not Optional</h2>
+
+  <p class="fade-in">
+    Let me close with a strong claim: <strong>any multi-agent system that operates without a governance layer is operating on borrowed time</strong>. It might work for demos. It might work for simple tasks. But the moment you scale it to real-world complexity &mdash; the kind that involves requirements traceability, architectural decisions, and iterative refinement &mdash; the absence of governance will manifest as unpredictable costs, circular reasoning, and quality variance.
+  </p>
+
+  <p class="fade-in">
+    The AI Governor is AIRUP's answer to this problem. It's not a luxury &mdash; it's the structural element that makes a heavyweight process viable in an age of per-token billing.
+  </p>
+
+  <p class="fade-in">
+    And here's the beautiful irony: RUP was abandoned because its overhead was too expensive <em>for humans</em>. AIRUP makes that overhead cheap by letting machines do it. But even for machines, "cheap" doesn't mean "free." The Governor ensures that the process's structure is a <strong>feature, not a liability</strong> &mdash; that every token spent produces value, and every loop that doesn't converge gets cut.
+  </p>
+
+  <blockquote class="fade-in">
+    "RUP failed because humans couldn't sustain the process. Ungoverned AI agents will fail because they'll over-sustain it. The Governor is the equilibrium."
+  </blockquote>
+
+  <p class="fade-in">
+    <strong>Next up:</strong> <em>SDD Meets RUP</em> &mdash; how specification formats (TOON, EARS, Kiro-style) map to the classical RUP artifacts, and why twenty-year-old process engineering turns out to be surprisingly good scaffolding for AI agents.
+  </p>
+
+  <!-- TAGS -->
+  <div class="tags fade-in">
+    <span>AI Governor</span>
+    <span>Multi-Agent Systems</span>
+    <span>Token Economics</span>
+    <span>Cost Control</span>
+    <span>AIRUP</span>
+    <span>Circuit Breaker</span>
+    <span>SDD</span>
+    <span>Software Engineering</span>
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="author-card fade-in">
+    <div class="author-avatar">RC</div>
+    <div class="author-info">
+      <h4>Ricardo Costa</h4>
+      <p>Software engineer exploring the intersection of classical software processes and AI-driven development. Currently pursuing a master's degree researching AIRUP &mdash; an AI-first approach to the Rational Unified Process.</p>
+    </div>
+  </div>
+
+</article>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>Brave New IA World &mdash; by Ricardo Costa</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
