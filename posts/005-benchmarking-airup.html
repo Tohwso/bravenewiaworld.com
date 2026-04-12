@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../images/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png">
+<link rel="shortcut icon" href="../favicon.ico">
+<meta name="google-site-verification" content="_97oaFM1mLh87ahif6GDfBCdHq6wlog85WR5xPBgUyk">
+<title>Benchmarking AIRUP — How Do You Measure a Process Designed for AI Agents? | Brave New IA World</title>
+<meta name="description" content="Everyone claims multi-agent systems work — but compared to what? An experimental design for benchmarking AIRUP against ungoverned agents: metrics, controls, threats to validity, and why token count is the most misleading benchmark in AI-driven development.">
+<meta name="author" content="Ricardo Costa">
+<meta name="keywords" content="AIRUP, benchmarking, multi-agent systems, experimental design, metrics, coordination, cost, quality, token economics, SDD, RUP, AI agents, software engineering, master thesis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Benchmarking AIRUP — How Do You Measure a Process Designed for AI Agents?">
+<meta property="og:description" content="Everyone claims multi-agent systems work — but compared to what? An experimental design for benchmarking AIRUP: metrics, controls, and why token count is the worst benchmark.">
+<meta property="og:site_name" content="Brave New IA World">
+<meta property="og:url" content="https://bravenewiaworld.com/posts/005-benchmarking-airup.html">
+<meta property="og:image" content="https://bravenewiaworld.com/images/og-post-005.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Benchmarking AIRUP — How Do You Measure a Process Designed for AI Agents?">
+<meta name="twitter:description" content="An experimental design for benchmarking AIRUP against ungoverned multi-agent pipelines. Metrics, controls, and why token count is misleading.">
+<meta name="twitter:image" content="https://bravenewiaworld.com/images/og-post-005.png">
+<meta property="article:published_time" content="2026-04-13">
+<meta property="article:author" content="Ricardo Costa">
+<meta property="article:section" content="Software Engineering">
+<meta property="article:tag" content="AIRUP">
+<meta property="article:tag" content="Benchmarking">
+<meta property="article:tag" content="Multi-Agent Systems">
+<meta property="article:tag" content="Experimental Design">
+<meta property="article:tag" content="Metrics">
+<link rel="canonical" href="https://bravenewiaworld.com/posts/005-benchmarking-airup.html">
+
+<!-- Structured Data: Article -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Benchmarking AIRUP — How Do You Measure a Process Designed for AI Agents?",
+  "description": "An experimental design for benchmarking AIRUP against ungoverned multi-agent pipelines. Metrics framework, control groups, threats to validity, and early signals from preliminary runs.",
+  "url": "https://bravenewiaworld.com/posts/005-benchmarking-airup.html",
+  "datePublished": "2026-04-13",
+  "dateModified": "2026-04-13",
+  "author": {
+    "@type": "Person",
+    "name": "Ricardo Costa"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Brave New IA World"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://bravenewiaworld.com/posts/005-benchmarking-airup.html"
+  },
+  "keywords": ["AIRUP", "benchmarking", "multi-agent systems", "experimental design", "metrics", "coordination", "cost", "quality", "SDD", "RUP", "AI agents"],
+  "articleSection": "Software Engineering",
+  "wordCount": 3800,
+  "timeRequired": "PT15M"
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="blog-header">
+  <a href="/" class="blog-brand">Brave New IA World</a>
+  <nav class="blog-nav">
+    <a href="/">Home</a>
+    <a href="/#posts">Archive</a>
+    <span class="tag">Post #005</span>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero-post">
+  <div class="hero-label">Post #005 &mdash; The AIRUP Series</div>
+  <h1>Benchmarking <span class="highlight">AIRUP</span></h1>
+  <p class="hero-subtitle">Everyone claims their multi-agent system "works." But compared to what? Time to design an experiment that actually proves something.</p>
+  <div class="hero-meta">
+    <span>Ricardo Costa</span>
+    <span class="dot"></span>
+    <span>~15 min read</span>
+    <span class="dot"></span>
+    <time datetime="2026-04-13">April 2026</time>
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<article class="article">
+
+  <p class="lead fade-in">
+    Over the past four posts, I've built the conceptual case for AIRUP: <a href="001-can-ai-resurrect-rup.html">why RUP deserves a second chance</a>, <a href="002-what-is-sdd.html">what SDD brings to the table</a>, <a href="003-the-ai-governor-pattern.html">how the AI Governor controls cost</a>, and <a href="004-sdd-meets-rup.html">why the SDD-RUP mapping isn't accidental</a>. But concepts don't graduate into theses. <strong>Evidence does.</strong> This post is about how I intend to produce that evidence &mdash; and why the obvious metrics are the wrong ones.
+  </p>
+
+  <!-- SECTION: THE PROBLEM -->
+  <h2 class="fade-in">The Benchmarking Problem</h2>
+
+  <p class="fade-in">
+    Ask anyone building multi-agent systems whether their approach works, and you'll get enthusiastic demos. An agent writes code! Another agent reviews it! They iterate! Tests pass! Ship it!
+  </p>
+
+  <p class="fade-in">
+    But <em>"it works"</em> is not a benchmark. <em>"It works better than the alternative"</em> is. And that requires answering uncomfortable questions:
+  </p>
+
+  <ul class="fade-in">
+    <li>Better than <strong>what</strong>? A single agent? An ungoverned multi-agent pipeline? A human team?</li>
+    <li>Better <strong>how</strong>? Faster? Cheaper? Higher quality? More consistent?</li>
+    <li>Better <strong>at what scale</strong>? A TODO app? A 50-requirement enterprise feature? A regulated system?</li>
+  </ul>
+
+  <p class="fade-in">
+    Without answering these questions rigorously, any claim about AIRUP &mdash; or any other AI-driven development approach &mdash; is anecdote dressed as evidence. My thesis needs more than anecdotes.
+  </p>
+
+  <blockquote class="fade-in">
+    "The most dangerous sentence in AI engineering is 'it worked in the demo.' Demos are curated experiences. Benchmarks are adversarial ones."
+  </blockquote>
+
+  <!-- SECTION: WRONG METRIC -->
+  <h2 class="fade-in">Why Token Count Is the Wrong Metric</h2>
+
+  <p class="fade-in">
+    Let me address the obvious metric first, because it's the one people reach for instinctively: <strong>total tokens consumed</strong>.
+  </p>
+
+  <p class="fade-in">
+    At first glance, it makes sense. Tokens cost money. Fewer tokens = cheaper = better. Simple. And wrong.
+  </p>
+
+  <p class="fade-in">
+    Here's why. Consider two pipelines implementing the same feature:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>Pipeline A</strong> uses 200,000 tokens. Produces code that passes 90% of tests. Has 3 orphan requirements that nobody noticed. No traceability. Architectural decisions undocumented.</li>
+    <li><strong>Pipeline B</strong> uses 800,000 tokens. Produces code that passes 100% of tests. Full traceability chain. All architectural decisions recorded. Zero orphan requirements.</li>
+  </ul>
+
+  <p class="fade-in">
+    Pipeline A is "4x more efficient" by token count. Pipeline B is objectively better by every quality dimension. If Pipeline A's missing requirements surface in production, the cost of fixing them will dwarf the token savings.
+  </p>
+
+  <p class="fade-in">
+    Token count is an <em>input metric</em>. It tells you how much fuel you burned, not how far you traveled. The right metric is <strong>tokens per unit of verified outcome</strong> &mdash; how many tokens did it take to produce one requirement that's implemented, tested, and traceable? That's an efficiency metric with a denominator that actually means something.
+  </p>
+
+  <p class="fade-in">
+    As I discussed in the <a href="003-the-ai-governor-pattern.html">Governor post</a>, token costs are deflating at 99%+ over two years. Optimizing for raw token count is like optimizing for disk space in 2026 &mdash; solving a constraint that's rapidly becoming irrelevant. <strong>What matters is what the tokens produce, not how many you spent.</strong>
+  </p>
+
+  <!-- SECTION: THREE DIMENSIONS -->
+  <h2 class="fade-in">The Three Dimensions That Actually Matter</h2>
+
+  <p class="fade-in">
+    My experimental framework evaluates AIRUP across three orthogonal dimensions. Each captures something the others miss:
+  </p>
+
+  <h3 class="fade-in">Dimension 1: Coordination</h3>
+
+  <p class="fade-in">
+    Do agents work together coherently, or do they produce contradictory artifacts? In a multi-agent pipeline, coordination failures manifest as:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>Artifact conflicts</strong> &mdash; the architect specifies PostgreSQL, the implementer uses MongoDB</li>
+    <li><strong>Rework cycles</strong> &mdash; agent B rejects agent A's output, A revises, B rejects again</li>
+    <li><strong>Orphan artifacts</strong> &mdash; requirements that no design decision addresses, or tasks that don't trace to any requirement</li>
+    <li><strong>Redundant work</strong> &mdash; two agents independently solving the same sub-problem</li>
+  </ul>
+
+  <p class="fade-in">
+    Coordination is what RUP's role-based structure is supposed to improve. If AIRUP doesn't measurably reduce coordination failures compared to ungoverned pipelines, the whole thesis falls apart.
+  </p>
+
+  <h3 class="fade-in">Dimension 2: Cost Efficiency</h3>
+
+  <p class="fade-in">
+    Not raw token count, but <strong>normalized cost</strong>: resources consumed per unit of value delivered. The specific metric I'm using is:
+  </p>
+
+  <div class="callout fade-in">
+    <h4>Cost Efficiency Ratio</h4>
+    <p>
+      <code style="font-family:var(--mono);color:var(--accent-secondary);">CER = Total Tokens / Verified Outcomes</code>
+    </p>
+    <p>
+      Where <strong>Verified Outcomes</strong> = number of requirements that are (a) implemented in code, (b) covered by at least one passing test, and (c) traceable through the full chain (REQ&rarr;DES&rarr;TASK&rarr;TEST&rarr;CODE).
+    </p>
+    <p>
+      A pipeline that uses 1M tokens to fully implement 20 requirements (CER = 50K) is more efficient than one that uses 300K tokens to implement 4 requirements (CER = 75K) &mdash; even though the latter used 70% fewer tokens.
+    </p>
+  </div>
+
+  <p class="fade-in">
+    I also track <strong>waste ratio</strong>: the percentage of tokens spent on iterations that didn't advance the pipeline (circular debates, re-derivations of settled decisions, validations that could have been deterministic). The <a href="003-the-ai-governor-pattern.html">Governor's strategies</a> should drive this number down significantly.
+  </p>
+
+  <h3 class="fade-in">Dimension 3: Output Quality</h3>
+
+  <p class="fade-in">
+    The hardest dimension to measure, and the most important. Quality has multiple sub-dimensions:
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>Quality Metric</th>
+        <th>How Measured</th>
+        <th>What It Indicates</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Test pass rate</td>
+        <td>% of generated tests that pass</td>
+        <td>Code correctness against spec</td>
+      </tr>
+      <tr>
+        <td>Traceability coverage</td>
+        <td>% of requirements with full chain (REQ&rarr;DES&rarr;TASK&rarr;TEST)</td>
+        <td>Specification completeness</td>
+      </tr>
+      <tr>
+        <td>Orphan rate</td>
+        <td># of artifacts not referenced by any downstream artifact</td>
+        <td>Scope leakage or incomplete design</td>
+      </tr>
+      <tr>
+        <td>Defect escape rate</td>
+        <td># of defects found in post-pipeline review / total requirements</td>
+        <td>Pipeline's ability to catch its own mistakes</td>
+      </tr>
+      <tr>
+        <td>Architecture fitness</td>
+        <td>Expert review score (1-5) on design decision quality</td>
+        <td>Structural soundness (qualitative)</td>
+      </tr>
+      <tr>
+        <td>Spec-code alignment</td>
+        <td>% of spec statements that accurately describe the implemented code</td>
+        <td>Whether the spec stayed honest</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    The first four metrics are quantitative and automatable. Architecture fitness and spec-code alignment require human judgment &mdash; which introduces subjectivity, but is unavoidable for quality assessment. I mitigate this by using <strong>blinded review</strong>: the reviewer sees the artifacts but doesn't know which pipeline produced them.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: EXPERIMENTAL DESIGN -->
+  <h2 class="fade-in">The Experiment</h2>
+
+  <p class="fade-in">
+    Here's the experimental design I'm using. It's not perfect &mdash; I'll address the imperfections in the threats section &mdash; but it's rigorous enough to produce meaningful results.
+  </p>
+
+  <h3 class="fade-in">Three Pipelines, Same Feature</h3>
+
+  <p class="fade-in">
+    Each feature is implemented three times, once by each pipeline configuration:
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>Pipeline</th>
+        <th>Configuration</th>
+        <th>What It Tests</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="role-agent">Pipeline U (Unstructured)</td>
+        <td>Single prompt &rarr; agent generates code directly. No specs, no phases, no review.</td>
+        <td>Baseline: what happens with zero process</td>
+      </tr>
+      <tr>
+        <td class="role-agent">Pipeline S (SDD-only)</td>
+        <td>SDD pipeline: requirements.md &rarr; design.md &rarr; tasks.md &rarr; code. Multi-agent, but no phases, no Governor, no quality gates between artifacts.</td>
+        <td>Isolates SDD's contribution without RUP</td>
+      </tr>
+      <tr>
+        <td class="role-agent">Pipeline A (AIRUP)</td>
+        <td>Full AIRUP: SDD specs + RUP phases + AI Governor + deterministic quality gates + traceability validation.</td>
+        <td>The full thesis: SDD + RUP + Governor</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    Pipeline U is the "vibe coding" baseline &mdash; the approach most developers use today when prompting AI agents. Pipeline S isolates SDD's effect. Pipeline A is the full AIRUP treatment. By comparing U→S, I can measure what structured specs add. By comparing S→A, I can measure what RUP-style governance adds on top of specs.
+  </p>
+
+  <div class="callout fade-in">
+    <h4>Why Three Pipelines, Not Two?</h4>
+    <p>
+      A two-way comparison (U vs. A) would tell me whether AIRUP is better than no process &mdash; but it wouldn't tell me <strong>which parts of AIRUP matter</strong>. Maybe the specs alone explain all the improvement, and the Governor adds nothing. Maybe the Governor is the differentiator, and the specs are just noise. The three-pipeline design lets me decompose AIRUP's effect into its constituent contributions.
+    </p>
+  </div>
+
+  <h3 class="fade-in">Feature Selection Criteria</h3>
+
+  <p class="fade-in">
+    Not every feature is suitable for benchmarking. A TODO app doesn't need a process &mdash; any pipeline will produce a reasonable result. A distributed banking system is too complex for controlled experimentation. I need features that sit in the sweet spot: <strong>complex enough to differentiate the pipelines, simple enough to implement multiple times</strong>.
+  </p>
+
+  <p class="fade-in">
+    My selection criteria:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>15-30 requirements</strong> &mdash; enough that coordination and traceability matter, not so many that a single run takes days</li>
+    <li><strong>2-3 components</strong> &mdash; at least one component boundary, because cross-component coordination is where processes prove their value</li>
+    <li><strong>Non-trivial business rules</strong> &mdash; validation logic, state machines, or conditional behavior that creates edge cases</li>
+    <li><strong>Domain-neutral</strong> &mdash; no specialized domain knowledge that might advantage one pipeline configuration</li>
+    <li><strong>Testable</strong> &mdash; every requirement should be verifiable with an automated test</li>
+  </ul>
+
+  <p class="fade-in">
+    Example features I'm considering: a library reservation system (state machine: available → reserved → borrowed → returned, with overdue handling), an event ticketing system (capacity limits, waitlists, refund rules), a recipe management API (CRUD + search + ingredient scaling + dietary filtering). None of these are trivial, but all are well-understood enough that an expert can evaluate the output quality.
+  </p>
+
+  <h3 class="fade-in">Execution Protocol</h3>
+
+  <p class="fade-in">
+    For each feature × pipeline combination, the execution follows a strict protocol:
+  </p>
+
+  <ol class="fade-in">
+    <li><strong>Input standardization</strong> &mdash; Each pipeline receives the <em>same</em> initial prompt describing the feature. For Pipeline U, this is the only input. For S and A, the prompt seeds the requirements phase.</li>
+    <li><strong>No human intervention</strong> &mdash; Once started, the pipeline runs autonomously. No human fixes, no mid-run corrections. If the pipeline produces broken output, that's a data point.</li>
+    <li><strong>Fixed model versions</strong> &mdash; All runs use the same LLM versions, pinned to specific model IDs. This eliminates model drift as a confounding variable.</li>
+    <li><strong>Multiple runs</strong> &mdash; Each feature × pipeline combination runs <strong>3 times</strong> (minimum) to account for LLM non-determinism. Results are reported as mean ± standard deviation.</li>
+    <li><strong>Full instrumentation</strong> &mdash; Every LLM call is logged: prompt, response, token count, model used, latency. This enables post-hoc analysis of where tokens were spent and where waste occurred.</li>
+  </ol>
+
+  <hr class="separator">
+
+  <!-- SECTION: METRICS FRAMEWORK -->
+  <h2 class="fade-in">The Metrics Framework</h2>
+
+  <p class="fade-in">
+    Here's the concrete measurement plan. For each run, I collect:
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Type</th>
+        <th>Collection Method</th>
+        <th>Expected AIRUP Advantage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Total tokens (input + output)</td>
+        <td>Quantitative</td>
+        <td>LLM call logs</td>
+        <td>Higher than U, similar or lower than S</td>
+      </tr>
+      <tr>
+        <td>Cost Efficiency Ratio (CER)</td>
+        <td>Quantitative</td>
+        <td>Tokens / verified outcomes</td>
+        <td>Lowest (best) of all three</td>
+      </tr>
+      <tr>
+        <td>Waste ratio</td>
+        <td>Quantitative</td>
+        <td>Circular iterations / total iterations</td>
+        <td>Lowest (Governor prevents loops)</td>
+      </tr>
+      <tr>
+        <td>Test pass rate</td>
+        <td>Quantitative</td>
+        <td>Test runner output</td>
+        <td>Highest</td>
+      </tr>
+      <tr>
+        <td>Traceability coverage</td>
+        <td>Quantitative</td>
+        <td>Chain validation script</td>
+        <td>Near 100% (deterministic gates enforce it)</td>
+      </tr>
+      <tr>
+        <td>Orphan rate</td>
+        <td>Quantitative</td>
+        <td>Graph analysis on artifact IDs</td>
+        <td>Near 0% (gates catch orphans)</td>
+      </tr>
+      <tr>
+        <td>Defect escape rate</td>
+        <td>Quantitative</td>
+        <td>Post-pipeline expert review</td>
+        <td>Lowest</td>
+      </tr>
+      <tr>
+        <td>Architecture fitness</td>
+        <td>Qualitative</td>
+        <td>Blinded expert review (1-5)</td>
+        <td>Highest (architecture phase exists)</td>
+      </tr>
+      <tr>
+        <td>Spec-code alignment</td>
+        <td>Qualitative</td>
+        <td>Blinded expert review (%)</td>
+        <td>Highest (specs are source of truth)</td>
+      </tr>
+      <tr>
+        <td>Wall-clock time</td>
+        <td>Quantitative</td>
+        <td>Start-to-finish timer</td>
+        <td>Longer than U, but acceptable trade</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    Notice the "Expected AIRUP Advantage" column. I'm <strong>pre-registering my hypotheses</strong> &mdash; stating what I expect to find <em>before</em> running the experiments. This is important because post-hoc explanations are easy to fabricate. Pre-registration forces intellectual honesty: if the results don't match my predictions, I have to explain why, not just rationalize them.
+  </p>
+
+  <p class="fade-in">
+    The most interesting prediction: <strong>AIRUP will use more total tokens than Pipeline U, but have a better Cost Efficiency Ratio</strong>. In other words, AIRUP is more expensive in absolute terms but cheaper per unit of quality. If this holds, it validates the core thesis: the overhead of structured specs and governance <em>pays for itself</em> in output quality.
+  </p>
+
+  <!-- SECTION: THREATS -->
+  <h2 class="fade-in">Threats to Validity (The Honest Part)</h2>
+
+  <p class="fade-in">
+    No experimental design is perfect. Here are the threats I've identified and how I'm mitigating them:
+  </p>
+
+  <h3 class="fade-in">1. LLM Non-Determinism</h3>
+
+  <p class="fade-in">
+    Even with temperature set to 0, LLMs produce slightly different outputs across runs. This means two runs of the same pipeline on the same feature can yield different results.
+  </p>
+
+  <p class="fade-in">
+    <strong>Mitigation:</strong> Multiple runs per configuration (minimum 3, ideally 5). Report results as distributions, not single numbers. Use statistical tests (Mann-Whitney U, since distributions may not be normal) to assess whether differences between pipelines are significant or just noise.
+  </p>
+
+  <h3 class="fade-in">2. Feature Selection Bias</h3>
+
+  <p class="fade-in">
+    If I pick features where structured processes obviously help (e.g., state machines with complex transitions), I'm stacking the deck in AIRUP's favor. If I pick features where they don't (CRUD endpoints), I'm undermining it.
+  </p>
+
+  <p class="fade-in">
+    <strong>Mitigation:</strong> Use a range of complexity levels. Include at least one "simple" feature where Pipeline U should perform well, one "medium" feature, and one "complex" feature. Report results per complexity tier, not just in aggregate. If AIRUP only helps at higher complexity, that's a legitimate finding &mdash; not a failure.
+  </p>
+
+  <h3 class="fade-in">3. Experimenter Effect</h3>
+
+  <p class="fade-in">
+    I designed AIRUP. I wrote the prompts. I built the Governor. I'm deeply biased toward wanting it to succeed. This is the most serious threat.
+  </p>
+
+  <p class="fade-in">
+    <strong>Mitigation:</strong> Three strategies. First, the initial prompts for all three pipelines are derived from the <em>same</em> feature description &mdash; I don't give AIRUP better instructions. Second, the blinded expert review ensures that quality assessment is not influenced by knowledge of which pipeline produced the output. Third, I'm publishing the prompts, the code, and the raw data &mdash; anyone can reproduce the experiment and verify the results.
+  </p>
+
+  <h3 class="fade-in">4. Model Dependency</h3>
+
+  <p class="fade-in">
+    Results obtained with GPT-4o might not hold for Claude, Gemini, or DeepSeek. AIRUP might work well with one model family and fail with another.
+  </p>
+
+  <p class="fade-in">
+    <strong>Mitigation:</strong> The primary experiments use a single model family (pinned version) for consistency. A secondary experiment reruns a subset of features with a different model family to test generalizability. Full cross-model testing is out of scope for the thesis but noted as future work.
+  </p>
+
+  <h3 class="fade-in">5. Scale Limitation</h3>
+
+  <p class="fade-in">
+    Features with 15-30 requirements are not enterprise-scale. AIRUP's value proposition grows with complexity, but I can't test at enterprise scale within a thesis timeline.
+  </p>
+
+  <p class="fade-in">
+    <strong>Mitigation:</strong> Acknowledge the limitation explicitly. Frame results as <em>"at this complexity level"</em> and extrapolate cautiously. Use the complexity-tier analysis to show the <em>trend</em> &mdash; if AIRUP's advantage grows from simple to medium to complex features, it's reasonable to hypothesize that the trend continues at larger scale, even though I can't prove it directly.
+  </p>
+
+  <blockquote class="fade-in">
+    "A thesis that hides its weaknesses isn't rigorous &mdash; it's fragile. A thesis that names them, bounds them, and works within their constraints is one that reviewers trust."
+  </blockquote>
+
+  <hr class="separator">
+
+  <!-- SECTION: EARLY SIGNALS -->
+  <h2 class="fade-in">Early Signals</h2>
+
+  <p class="fade-in">
+    I haven't completed the full experimental run yet, but I've done enough preliminary work to share some early signals. These are <strong>observations, not results</strong> &mdash; the sample size is too small for statistical claims. But they're interesting enough to report.
+  </p>
+
+  <h3 class="fade-in">Signal 1: Unstructured pipelines fail silently</h3>
+
+  <p class="fade-in">
+    Pipeline U (single prompt → code) consistently produces code that <em>looks right</em> but misses 20-40% of the requirements. Not dramatically &mdash; not a crash or an error. Just quiet omissions. A validation rule that wasn't implemented. An edge case that wasn't handled. A state transition that was forgotten.
+  </p>
+
+  <p class="fade-in">
+    This is the most dangerous failure mode: <strong>the output looks complete, passes a casual review, but silently drops scope</strong>. Without a requirements checklist to verify against, you wouldn't know anything was missing until a user hits the gap in production.
+  </p>
+
+  <h3 class="fade-in">Signal 2: SDD catches the omissions, but creates new problems</h3>
+
+  <p class="fade-in">
+    Pipeline S (SDD without governance) catches most of the scope gaps &mdash; because the requirements are written down and the implementation agent can check them off. But it introduces a new problem: <strong>spec-code drift</strong>. Without quality gates between phases, the design.md sometimes contradicts the requirements.md, and the implementation follows the design (which is closer in the pipeline) rather than the requirements (which are authoritative).
+  </p>
+
+  <p class="fade-in">
+    In one run, the requirements specified a maximum of 5 items per user. The design document mentioned this constraint but described it as "configurable." The implementation made it configurable with a default of 10. The original requirement was effectively overridden by the design document's interpretation &mdash; a subtle but consequential drift.
+  </p>
+
+  <h3 class="fade-in">Signal 3: The Governor's biggest win is not cost</h3>
+
+  <p class="fade-in">
+    I expected the <a href="003-the-ai-governor-pattern.html">AI Governor</a>'s main contribution to be cost reduction through tiered model routing and contextual pruning. In practice, its biggest impact has been <strong>catching circular reasoning</strong>.
+  </p>
+
+  <p class="fade-in">
+    Without the Governor, agents in Pipeline S occasionally enter a refinement loop where Agent A proposes something, Agent B requests a change, Agent A revises, Agent B finds a new issue in the revision, and so on. These loops converge eventually, but they converge on <em>marginal improvements</em> &mdash; spending thousands of tokens to debate whether an error message should say "invalid input" or "input validation failed."
+  </p>
+
+  <p class="fade-in">
+    The Governor's circuit breaker cuts these loops after 3 iterations and either accepts the current version or escalates. In preliminary runs, this alone reduced Pipeline A's token consumption by roughly <strong>15-25% compared to Pipeline S</strong> &mdash; not by being smarter, but by being <em>impatient with diminishing returns</em>.
+  </p>
+
+  <h3 class="fade-in">Signal 4: Deterministic validation is underrated</h3>
+
+  <p class="fade-in">
+    The <a href="004-sdd-meets-rup.html">traceability chain</a> validation &mdash; a purely deterministic check that every REQ has a DES, every DES has a TASK, every TASK has a TEST &mdash; catches <strong>3-5 structural issues per feature run</strong> that would otherwise propagate into code. These are the kinds of issues that an LLM reviewer might or might not notice, depending on context window and attention.
+  </p>
+
+  <p class="fade-in">
+    The deterministic check notices <em>every single time</em>, costs zero tokens, and takes milliseconds. It's the highest-ROI component in the entire pipeline, and it only works because <a href="004-sdd-meets-rup.html">SDD's structured format makes it possible</a>. You can't run a traceability check on prose requirements.
+  </p>
+
+  <div class="callout fade-in">
+    <h4>The Emerging Picture</h4>
+    <p>
+      From early signals, AIRUP's advantage isn't dramatic in any single dimension &mdash; it's <strong>cumulative across multiple small improvements</strong>. Better scope coverage (vs. U). Fewer spec-code drifts (vs. S). Less circular waste. Deterministic safety nets. None of these alone is revolutionary. Together, they compound into a meaningfully better outcome.
+    </p>
+    <p>
+      Whether this picture holds at full experimental scale is what the next few months will tell.
+    </p>
+  </div>
+
+  <hr class="separator">
+
+  <!-- SECTION: WHAT IT DOESN'T TEST -->
+  <h2 class="fade-in">What This Experiment Doesn't Test</h2>
+
+  <p class="fade-in">
+    Intellectual honesty requires naming the questions I'm <em>not</em> answering:
+  </p>
+
+  <p class="fade-in">
+    <strong>AIRUP vs. human teams.</strong> Comparing an AI pipeline to a human team is a different experiment with different controls, different timescales, and different ethical considerations. I'm comparing AI pipeline configurations against each other &mdash; not against humans. The question isn't "can AI replace developers?" but "given that you're using AI agents, does a structured process help?"
+  </p>
+
+  <p class="fade-in">
+    <strong>Long-term maintainability.</strong> I can measure whether the code is correct and well-structured at time of creation. I can't measure whether it's maintainable six months later, because the experiment doesn't run for six months. Maintainability is probably AIRUP's strongest argument (documented architecture, traceable requirements, living specs), but I can't prove it within this design.
+  </p>
+
+  <p class="fade-in">
+    <strong>Team dynamics.</strong> AIRUP involves a human in the loop for key decisions. How well does this work with different types of humans? Does AIRUP frustrate experienced architects who "just want to code"? Does it help junior developers who need structure? These are interaction design questions, not process evaluation questions.
+  </p>
+
+  <p class="fade-in">
+    <strong>Regulated environments.</strong> AIRUP's traceability chain is designed for contexts where auditing matters &mdash; healthcare, finance, defense. But testing in these environments requires domain expertise and regulatory knowledge that I don't have. I can <em>argue</em> that the traceability chain satisfies audit requirements; I can't <em>prove</em> it.
+  </p>
+
+  <!-- SECTION: CLOSING -->
+  <h2 class="fade-in">From Concept to Evidence</h2>
+
+  <p class="fade-in">
+    This post marks the inflection point of the AIRUP series. Posts 1-4 built the <strong>theoretical case</strong>: what AIRUP is, why it should work, how its components fit together. Post 5 describes the <strong>empirical apparatus</strong>: how I intend to test whether it actually does.
+  </p>
+
+  <p class="fade-in">
+    The experiment isn't designed to prove that AIRUP is the best possible approach to AI-driven development. That would be an absurd claim. It's designed to test a more modest hypothesis: <strong>that adding structured specifications and process governance to a multi-agent pipeline produces measurably better outcomes than not adding them, at a cost that's proportionate to the benefit</strong>.
+  </p>
+
+  <p class="fade-in">
+    If the data supports this hypothesis, AIRUP has a case. If it doesn't &mdash; if the overhead of specs and governance outweighs the quality gains, or if the gains are statistically insignificant &mdash; then I have a different kind of thesis: one that explains why the intuitive appeal of structured processes doesn't survive contact with empirical testing. That would also be a valuable contribution.
+  </p>
+
+  <p class="fade-in">
+    Either way, the data wins. That's how science works.
+  </p>
+
+  <blockquote class="fade-in">
+    "A good thesis isn't one that confirms the researcher's beliefs. It's one where the researcher designed an experiment that could have falsified them &mdash; and then ran it anyway."
+  </blockquote>
+
+  <p class="fade-in">
+    <strong>Next up:</strong> <em>Building an AIRUP Prototype</em> &mdash; from experimental design to running code. The architecture of the pipeline, the agent prompts, the Governor's decision engine, and the mistakes I made along the way.
+  </p>
+
+  <!-- TAGS -->
+  <div class="tags fade-in">
+    <span>AIRUP</span>
+    <span>Benchmarking</span>
+    <span>Experimental Design</span>
+    <span>Multi-Agent Systems</span>
+    <span>Metrics</span>
+    <span>Token Economics</span>
+    <span>SDD</span>
+    <span>Software Engineering</span>
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="author-card fade-in">
+    <div class="author-avatar">RC</div>
+    <div class="author-info">
+      <h4>Ricardo Costa</h4>
+      <p>Software engineer exploring the intersection of classical software processes and AI-driven development. Currently pursuing a master's degree researching AIRUP &mdash; an AI-first approach to the Rational Unified Process.</p>
+    </div>
+  </div>
+
+</article>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>Brave New IA World &mdash; by Ricardo Costa</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
