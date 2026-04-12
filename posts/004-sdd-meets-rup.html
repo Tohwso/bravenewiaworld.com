@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../images/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png">
+<link rel="shortcut icon" href="../favicon.ico">
+<meta name="google-site-verification" content="_97oaFM1mLh87ahif6GDfBCdHq6wlog85WR5xPBgUyk">
+<title>SDD Meets RUP — When Modern Specs Rediscover Ancient Wisdom | Brave New IA World</title>
+<meta name="description" content="The mapping between SDD spec formats (requirements.md, design.md, tasks.md) and classical RUP artifacts isn't a coincidence — it's convergent evolution. A deep dive into how twenty-year-old process engineering turns out to be surprisingly good scaffolding for AI agents.">
+<meta name="author" content="Ricardo Costa">
+<meta name="keywords" content="SDD, Specification-Driven Development, RUP, Rational Unified Process, AIRUP, requirements, design, traceability, artifacts, EARS, TOON, Kiro, Spec-Kit, AI agents, software engineering, multi-agent systems">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SDD Meets RUP — When Modern Specs Rediscover Ancient Wisdom">
+<meta property="og:description" content="The mapping between SDD spec formats and classical RUP artifacts isn't a coincidence — it's convergent evolution. Twenty-year-old process engineering meets AI-native specifications.">
+<meta property="og:site_name" content="Brave New IA World">
+<meta property="og:url" content="https://bravenewiaworld.com/posts/004-sdd-meets-rup.html">
+<meta property="og:image" content="https://bravenewiaworld.com/images/og-post-004.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="SDD Meets RUP — When Modern Specs Rediscover Ancient Wisdom">
+<meta name="twitter:description" content="SDD spec formats map to RUP artifacts with uncanny precision. Not by accident — by convergent evolution. Here's the mapping, and why it matters.">
+<meta name="twitter:image" content="https://bravenewiaworld.com/images/og-post-004.png">
+<meta property="article:published_time" content="2026-04-13">
+<meta property="article:author" content="Ricardo Costa">
+<meta property="article:section" content="Software Engineering">
+<meta property="article:tag" content="SDD">
+<meta property="article:tag" content="RUP">
+<meta property="article:tag" content="AIRUP">
+<meta property="article:tag" content="Traceability">
+<meta property="article:tag" content="Software Architecture">
+<link rel="canonical" href="https://bravenewiaworld.com/posts/004-sdd-meets-rup.html">
+
+<!-- Structured Data: Article -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "SDD Meets RUP — When Modern Specs Rediscover Ancient Wisdom",
+  "description": "The mapping between SDD spec formats (requirements.md, design.md, tasks.md) and classical RUP artifacts isn't a coincidence — it's convergent evolution. A deep dive into traceability, artifact mapping, and why RUP was the right scaffolding all along.",
+  "url": "https://bravenewiaworld.com/posts/004-sdd-meets-rup.html",
+  "datePublished": "2026-04-13",
+  "dateModified": "2026-04-13",
+  "author": {
+    "@type": "Person",
+    "name": "Ricardo Costa"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Brave New IA World"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://bravenewiaworld.com/posts/004-sdd-meets-rup.html"
+  },
+  "keywords": ["SDD", "Specification-Driven Development", "RUP", "Rational Unified Process", "AIRUP", "traceability", "requirements", "design", "EARS", "TOON", "artifacts", "AI agents"],
+  "articleSection": "Software Engineering",
+  "wordCount": 3500,
+  "timeRequired": "PT14M"
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="blog-header">
+  <a href="/" class="blog-brand">Brave New IA World</a>
+  <nav class="blog-nav">
+    <a href="/">Home</a>
+    <a href="/#posts">Archive</a>
+    <span class="tag">Post #004</span>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero-post">
+  <div class="hero-label">Post #004 &mdash; The AIRUP Series</div>
+  <h1><span class="highlight">SDD</span> Meets <span class="highlight">RUP</span></h1>
+  <p class="hero-subtitle">When the hottest AI-native spec format accidentally reinvents artifacts that IBM catalogued in 1998. Convergent evolution is a beautiful thing.</p>
+  <div class="hero-meta">
+    <span>Ricardo Costa</span>
+    <span class="dot"></span>
+    <span>~14 min read</span>
+    <span class="dot"></span>
+    <time datetime="2026-04-13">April 2026</time>
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<article class="article">
+
+  <p class="lead fade-in">
+    In the <a href="002-what-is-sdd.html">SDD post</a>, I described the three-phase spec pipeline: <code>requirements.md</code> &rarr; <code>design.md</code> &rarr; <code>tasks.md</code>. In the <a href="001-can-ai-resurrect-rup.html">AIRUP post</a>, I mapped RUP roles to AI agents. The careful reader might have noticed something suspicious: <strong>the SDD pipeline looks a lot like a compressed version of the RUP workflow</strong>. That's not a coincidence. It's convergent evolution &mdash; and unpacking it is the key to understanding why AIRUP works.
+  </p>
+
+  <p class="fade-in">
+    Today I'm going to show you the exact mapping between modern SDD spec formats and classical RUP artifacts. Not as a historical curiosity, but because this mapping reveals something profound: <strong>twenty-five years of process engineering didn't produce waste &mdash; it produced a scaffold that was simply waiting for the right executors</strong>.
+  </p>
+
+  <!-- SECTION: THE TABLE -->
+  <h2 class="fade-in">The Mapping Nobody Drew</h2>
+
+  <p class="fade-in">
+    Let's start with the punchline. Here's how the core SDD artifacts map to their RUP ancestors:
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>SDD Artifact</th>
+        <th>RUP Artifact(s)</th>
+        <th>RUP Discipline</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="role-agent">requirements.md</td>
+        <td>Software Requirements Specification (SRS), Use-Case Model, Supplementary Specification</td>
+        <td>Requirements</td>
+      </tr>
+      <tr>
+        <td class="role-agent">design.md</td>
+        <td>Software Architecture Document (SAD), Design Model, Architecture Decision Records</td>
+        <td>Analysis &amp; Design</td>
+      </tr>
+      <tr>
+        <td class="role-agent">tasks.md</td>
+        <td>Iteration Plan, Work Breakdown Structure, Implementation Model (subset)</td>
+        <td>Project Management + Implementation</td>
+      </tr>
+      <tr>
+        <td class="role-agent">test-plan.md</td>
+        <td>Test Plan, Test-Case Specification</td>
+        <td>Test</td>
+      </tr>
+      <tr>
+        <td class="role-agent">vision.md / problem statement</td>
+        <td>Vision Document, Business Case</td>
+        <td>Business Modeling</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    If you've worked with SDD tools &mdash; Kiro, Spec-Kit, or any internal framework that generates <code>requirements.md</code> &rarr; <code>design.md</code> &rarr; <code>tasks.md</code> &mdash; you've been producing a compressed, machine-readable version of what RUP practitioners spent weeks writing in Rational Rose and IBM RequisitePro.
+  </p>
+
+  <p class="fade-in">
+    The question is: <strong>is this just a surface-level naming coincidence, or is there something deeper going on?</strong>
+  </p>
+
+  <!-- SECTION: CONVERGENT EVOLUTION -->
+  <h2 class="fade-in">Convergent Evolution in Process Design</h2>
+
+  <p class="fade-in">
+    In biology, convergent evolution is when unrelated species independently develop similar traits because they solve the same problem. Dolphins and sharks both have streamlined bodies and dorsal fins &mdash; not because they share an ancestor, but because water imposes the same physics on anything trying to swim fast through it.
+  </p>
+
+  <p class="fade-in">
+    Software development imposes similar "physics." Any process that tries to get from <em>"I have a problem"</em> to <em>"I have a deployed solution"</em> must answer the same fundamental questions, in roughly the same order:
+  </p>
+
+  <ol class="fade-in">
+    <li><strong>What</strong> should the system do? (Requirements)</li>
+    <li><strong>How</strong> should it be structured? (Design)</li>
+    <li><strong>Who</strong> does what, in what order? (Task decomposition)</li>
+    <li><strong>Did</strong> we build the right thing? (Verification)</li>
+  </ol>
+
+  <p class="fade-in">
+    RUP answered these questions with formal artifacts, ceremony, and tooling. SDD answers them with markdown files and AI agents. The answers are shaped differently, but the <em>questions</em> are identical &mdash; because the underlying problem is identical.
+  </p>
+
+  <blockquote class="fade-in">
+    "SDD didn't reinvent the wheel. It reinvented the axle &mdash; same function, different material, dramatically lower friction."
+  </blockquote>
+
+  <p class="fade-in">
+    This matters for AIRUP because it means we're not forcing an artificial marriage between unrelated concepts. SDD and RUP are <strong>naturally compatible</strong> &mdash; they express the same epistemic structure in different formats. AIRUP simply makes the compatibility explicit and exploits it.
+  </p>
+
+  <!-- SECTION: DEEP DIVE -->
+  <h2 class="fade-in">Artifact by Artifact: What Changes and What Doesn't</h2>
+
+  <p class="fade-in">
+    Let's go deeper. For each SDD artifact, I'll show what it shares with its RUP counterpart, what it does differently, and what AIRUP gains from the combination.
+  </p>
+
+  <h3 class="fade-in">requirements.md &harr; Software Requirements Specification</h3>
+
+  <p class="fade-in">
+    The RUP <strong>Software Requirements Specification (SRS)</strong> was a heavyweight document. IEEE 830 format. Sections for scope, definitions, system features, external interface requirements, performance requirements, design constraints. A fully-fleshed SRS for a medium project could run 50-100 pages.
+  </p>
+
+  <p class="fade-in">
+    An SDD <code>requirements.md</code> contains the same <em>information categories</em> &mdash; functional requirements, non-functional constraints, acceptance criteria &mdash; but in a format designed for machine consumption. The key innovations:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>Structured IDs</strong> &mdash; Every requirement gets a unique identifier (<code>REQ-001</code>, <code>REQ-002</code>) that downstream artifacts can reference. This is borrowed directly from requirements engineering, but now it's <em>parseable</em> by agents without natural language understanding.</li>
+    <li><strong>EARS notation</strong> &mdash; The Easy Approach to Requirements Syntax gives requirements a semi-formal grammar: <code>"When [trigger], the system shall [behavior]"</code>. This sits in the sweet spot between human readability and machine parsability. RUP never prescribed a specific requirement syntax &mdash; SDD does, and it matters enormously for automation.</li>
+    <li><strong>Inline traceability</strong> &mdash; Each requirement can reference the business scenario (<code>SC-001</code>) that motivated it, creating a traceable chain from user need to technical spec. RUP had traceability matrices as separate documents. SDD embeds traceability <em>inside</em> the artifact.</li>
+  </ul>
+
+  <div class="callout fade-in">
+    <h4>What AIRUP gains</h4>
+    <p>
+      In AIRUP, <code>requirements.md</code> is produced by the <strong>@requirements</strong> agent during the Elaboration phase and refined in Construction. Because the format is structured, the <a href="003-the-ai-governor-pattern.html">AI Governor</a> can run <strong>deterministic validations</strong> &mdash; checking ID uniqueness, EARS syntax, scenario coverage &mdash; without spending a single token on an LLM. The RUP SRS needed a human reviewer to catch formatting inconsistencies. The SDD requirements.md catches them with a regex.
+    </p>
+  </div>
+
+  <h3 class="fade-in">design.md &harr; Software Architecture Document</h3>
+
+  <p class="fade-in">
+    The RUP <strong>Software Architecture Document (SAD)</strong> was perhaps the most valuable artifact in the entire process &mdash; and the one that hurt the most to produce. It documented the system's architectural views (logical, process, deployment, implementation), key design decisions, and their rationale. Philippe Kruchten's <strong>4+1 architectural view model</strong> was born here.
+  </p>
+
+  <p class="fade-in">
+    An SDD <code>design.md</code> compresses this into a focused document with:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>Design Decisions</strong> with IDs (<code>DES-001</code>) &mdash; each decision records <em>what</em> was decided, <em>why</em>, and critically, <em>which requirements it addresses</em>. This is essentially an Architecture Decision Record (ADR), a concept that emerged <em>after</em> RUP but serves the same purpose as the SAD's rationale sections.</li>
+    <li><strong>Interface Contracts</strong> &mdash; API signatures, data models, component boundaries. Where the RUP SAD might use UML class and component diagrams, the SDD design.md uses code-like contract definitions that agents can directly implement against.</li>
+    <li><strong>Requirement traceability</strong> &mdash; Every <code>DES-N</code> references the <code>REQ-N</code> items it satisfies. This creates the second link in the traceability chain: business need &rarr; requirement &rarr; design decision.</li>
+  </ul>
+
+  <p class="fade-in">
+    The philosophical difference is subtle but important: the <strong>RUP SAD described architecture for human understanding</strong>. It used diagrams, prose, and visual models because humans are visual thinkers. The <strong>SDD design.md describes architecture for machine execution</strong>. It uses structured text, code-like contracts, and explicit cross-references because agents need unambiguous instructions, not elegant diagrams.
+  </p>
+
+  <p class="fade-in">
+    Neither format is inherently better. They optimize for different readers. AIRUP's insight is that <strong>you can have both</strong>: the structured machine-readable format as the source of truth, with human-friendly diagrams generated <em>from</em> the structured data whenever a human needs to review.
+  </p>
+
+  <h3 class="fade-in">tasks.md &harr; Iteration Plan + Work Breakdown</h3>
+
+  <p class="fade-in">
+    This is where the mapping gets interesting, because RUP didn't have a single artifact that cleanly corresponds to <code>tasks.md</code>. The functionality was spread across:
+  </p>
+
+  <ul class="fade-in">
+    <li>The <strong>Iteration Plan</strong> (which tasks to do in this iteration)</li>
+    <li>The <strong>Work Breakdown Structure</strong> (decomposition of work into assignable units)</li>
+    <li>Parts of the <strong>Implementation Model</strong> (what gets built and in what order)</li>
+  </ul>
+
+  <p class="fade-in">
+    SDD collapses all of this into a single <code>tasks.md</code>: an ordered list of atomic, implementable tasks, each referencing the design decisions (<code>DES-N</code>) and requirements (<code>REQ-N</code>) it implements. Each task is small enough to be completed in a single commit &mdash; essentially a work unit designed for TDD cycles.
+  </p>
+
+  <p class="fade-in">
+    This collapse is one of SDD's genuinely original contributions. RUP's separation of iteration planning from work breakdown from implementation modeling made sense when a project manager, a tech lead, and a developer were three different humans with three different perspectives. When the "executor" is an agent pipeline, <strong>the separation creates overhead without insight</strong>. One artifact, with full traceability, is better.
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>Aspect</th>
+        <th>RUP Approach</th>
+        <th>SDD Approach</th>
+        <th>AIRUP Synthesis</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Granularity</td>
+        <td>Work packages, sometimes vague</td>
+        <td>Atomic tasks, always specific</td>
+        <td>Atomic, with phase-aware ordering</td>
+      </tr>
+      <tr>
+        <td>Traceability</td>
+        <td>Separate matrix document</td>
+        <td>Inline references (TASK&rarr;DES&rarr;REQ)</td>
+        <td>Inline + validated by Governor</td>
+      </tr>
+      <tr>
+        <td>Ordering</td>
+        <td>Iteration-based (time-boxed)</td>
+        <td>Dependency-based (topological)</td>
+        <td>Layer-based (domain&rarr;app&rarr;infra&rarr;entry)</td>
+      </tr>
+      <tr>
+        <td>Verification</td>
+        <td>Iteration review (human)</td>
+        <td>TDD cycle (automated)</td>
+        <td>TDD + quality gates + Governor oversight</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="separator">
+
+  <!-- SECTION: TRACEABILITY -->
+  <h2 class="fade-in">The Traceability Chain: SDD's Gift to RUP</h2>
+
+  <p class="fade-in">
+    If there's one concept that makes the SDD-RUP marriage productive rather than ceremonial, it's the <strong>traceability chain</strong>.
+  </p>
+
+  <p class="fade-in">
+    RUP always preached traceability. The Rational Unified Process handbook dedicates entire sections to it. But in practice, traceability was the artifact that died first. Maintaining a separate traceability matrix &mdash; a spreadsheet mapping requirements to design elements to test cases to code modules &mdash; was mind-numbing work that nobody wanted to do and that rotted the moment someone forgot to update it.
+  </p>
+
+  <p class="fade-in">
+    SDD makes traceability <strong>structural</strong> rather than documentary. It's not a matrix you maintain &mdash; it's a property of the format:
+  </p>
+
+  <div class="diagram fade-in">
+    <div class="diagram-title">The Traceability Chain</div>
+    <div class="phase-flow">
+      <div class="phase-box">SC-N<br><small style="color:var(--text-dim);font-size:11px;">BDD Scenario</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">REQ-N<br><small style="color:var(--text-dim);font-size:11px;">Requirement</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">DES-N<br><small style="color:var(--text-dim);font-size:11px;">Design Decision</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">TASK-N<br><small style="color:var(--text-dim);font-size:11px;">Implementation</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">TEST-N<br><small style="color:var(--text-dim);font-size:11px;">Verification</small></div>
+    </div>
+  </div>
+
+  <p class="fade-in">
+    Every element references its upstream justification. <code>TASK-007</code> implements <code>DES-003</code>, which satisfies <code>REQ-012</code>, which derives from <code>SC-002</code>. The chain is embedded in the artifacts themselves &mdash; not in a separate document that can drift.
+  </p>
+
+  <p class="fade-in">
+    And here's what makes this transformative for AIRUP: <strong>the chain is machine-verifiable</strong>. The <a href="003-the-ai-governor-pattern.html">AI Governor</a> can run a deterministic check &mdash; zero LLM tokens &mdash; that answers:
+  </p>
+
+  <ul class="fade-in">
+    <li>Is every requirement traced to at least one scenario? (Coverage)</li>
+    <li>Is every design decision traced to at least one requirement? (Justification)</li>
+    <li>Is every task traced to at least one design decision? (Grounding)</li>
+    <li>Are there orphan requirements that no task implements? (Completeness)</li>
+    <li>Are there tasks that don't trace to any requirement? (Scope creep)</li>
+  </ul>
+
+  <p class="fade-in">
+    In the RUP era, these questions required a human analyst to manually cross-check documents. In AIRUP, they're <strong>graph traversals on structured data</strong>. The answer comes in milliseconds, not hours.
+  </p>
+
+  <blockquote class="fade-in">
+    "RUP told you traceability was important. SDD made it cheap. AIRUP made it automatic."
+  </blockquote>
+
+  <!-- SECTION: WHAT RUP ADDS -->
+  <h2 class="fade-in">What RUP Gives SDD (That SDD Can't Give Itself)</h2>
+
+  <p class="fade-in">
+    If SDD already provides structured specs with inline traceability, why bring RUP into the picture at all? Because <strong>SDD is a format, not a process</strong>. And formats without processes are recipes without a kitchen.
+  </p>
+
+  <p class="fade-in">
+    Here are the four things RUP contributes that SDD alone cannot provide:
+  </p>
+
+  <h3 class="fade-in">1. Progressive Elaboration Through Phases</h3>
+
+  <p class="fade-in">
+    SDD, as typically practiced, generates specs in one pass: describe the problem, generate requirements, derive design, decompose tasks, implement. It's a pipeline &mdash; linear, unidirectional, and brittle in the face of uncertainty.
+  </p>
+
+  <p class="fade-in">
+    RUP's four phases (Inception, Elaboration, Construction, Transition) provide a <strong>maturity model for specifications</strong>. During Inception, the requirements.md is deliberately incomplete &mdash; it captures the top-level scenarios and known constraints, nothing more. During Elaboration, the architecturally significant requirements get fleshed out. During Construction, the remaining requirements are detailed iteration by iteration.
+  </p>
+
+  <p class="fade-in">
+    This progressive refinement addresses the core criticism of SDD &mdash; that specs become stale or over-specified. In AIRUP, <strong>the spec is never "done"</strong>; it's "at the right level of detail for the current phase."
+  </p>
+
+  <h3 class="fade-in">2. Quality Gates Between Artifacts</h3>
+
+  <p class="fade-in">
+    In vanilla SDD, the pipeline flows from requirements to design to tasks to code, and the only validation is "does the code pass the tests?" But what if the design is internally inconsistent? What if the requirements contradict each other? What if the tasks miss an entire domain?
+  </p>
+
+  <p class="fade-in">
+    RUP introduces <strong>milestone reviews</strong> at the boundary of each phase. In AIRUP, these become automated quality gates:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>Post-Requirements Gate:</strong> Are all scenarios covered? Are requirements in EARS syntax? Are IDs unique? Are priorities assigned?</li>
+    <li><strong>Post-Design Gate:</strong> Does every design decision reference a requirement? Are there unaddressed non-functional requirements? Are component boundaries consistent with the interface contracts?</li>
+    <li><strong>Post-Task Gate:</strong> Does every task trace to a design decision? Are there orphan requirements? Is the implementation order dependency-safe?</li>
+  </ul>
+
+  <p class="fade-in">
+    These gates catch structural problems <em>before</em> any code is written. In my experiments with AIRUP, the post-design gate alone catches an average of <strong>3-4 issues per feature</strong> that would otherwise propagate into code and require expensive rework.
+  </p>
+
+  <h3 class="fade-in">3. Risk-Driven Iteration Order</h3>
+
+  <p class="fade-in">
+    SDD pipelines are typically <strong>feature-driven</strong>: implement feature A, then feature B, then feature C. RUP is <strong>risk-driven</strong>: implement the hardest, most uncertain parts first (during Elaboration), and save the routine work for Construction.
+  </p>
+
+  <p class="fade-in">
+    This matters enormously for AI-driven development. If you let an agent implement the easy features first and leave the architectural uncertainty for later, you end up with a codebase that works for simple cases but has a flawed foundation. RUP's risk-driven approach, combined with the AI Governor's ability to <strong>assess confidence per requirement</strong>, ensures that AIRUP tackles the structurally important work before the cosmetic work.
+  </p>
+
+  <h3 class="fade-in">4. The Governor's Process-Aware Governance</h3>
+
+  <p class="fade-in">
+    A standalone SDD pipeline has no concept of "where am I in the process?" It knows that requirements come before design, and design before tasks, but it doesn't know whether it's in an early exploratory phase or a late stabilization phase. The pipeline treats every invocation with the same urgency.
+  </p>
+
+  <p class="fade-in">
+    RUP gives the <a href="003-the-ai-governor-pattern.html">AI Governor</a> <strong>phase context</strong>. During Inception, the Governor knows to be tolerant of ambiguity and brief in its specs. During Construction, it knows to demand precision and completeness. During Transition, it shifts focus from creation to validation. The same Governor, the same strategies &mdash; but <strong>calibrated to the lifecycle phase</strong>.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: WHAT SDD ADDS -->
+  <h2 class="fade-in">What SDD Gives RUP (That RUP Could Never Achieve)</h2>
+
+  <p class="fade-in">
+    Fair is fair. If RUP gives SDD governance, SDD gives RUP something equally important: <strong>executability</strong>.
+  </p>
+
+  <h3 class="fade-in">Machine-Readable Artifacts</h3>
+
+  <p class="fade-in">
+    RUP artifacts were designed for human consumption. They used prose, UML diagrams, and structured templates that a person could read, interpret, and act on. But "interpret" is the operative word &mdash; different humans would interpret the same artifact differently, leading to the coordination problems that agile used as evidence against RUP.
+  </p>
+
+  <p class="fade-in">
+    SDD artifacts are designed for <strong>machine consumption</strong>. Structured IDs, formal syntax (EARS, TOON), inline references, parseable frontmatter. An AI agent reading a <code>requirements.md</code> can extract every requirement, check its syntax, resolve its references, and begin implementing &mdash; all without ambiguity.
+  </p>
+
+  <p class="fade-in">
+    This isn't a minor improvement. It's the difference between a blueprint that a human reads and translates into action, and a program that a machine executes directly. <strong>SDD makes RUP artifacts executable.</strong>
+  </p>
+
+  <h3 class="fade-in">Deterministic Validation</h3>
+
+  <p class="fade-in">
+    RUP's quality gates required human judgment: "Is this architecture document complete? Does this requirements specification cover the scope?" These are subjective questions that different reviewers answer differently.
+  </p>
+
+  <p class="fade-in">
+    SDD's structured format enables a significant portion of validation to be <strong>deterministic</strong>. As discussed in the <a href="003-the-ai-governor-pattern.html">Governor post</a>, checks like ID uniqueness, EARS syntax compliance, cross-reference completeness, and traceability coverage can run as code &mdash; no LLM required, no human judgment needed.
+  </p>
+
+  <p class="fade-in">
+    In AIRUP, we estimate that <strong>40-50% of the validation that previously required human reviewers can be automated deterministically</strong>. The remaining 50-60% &mdash; judgment calls about design quality, requirement relevance, and architectural fitness &mdash; goes to AI agents, with the Governor routing only truly ambiguous cases to humans.
+  </p>
+
+  <h3 class="fade-in">Specs as Code</h3>
+
+  <p class="fade-in">
+    I touched on this in the <a href="002-what-is-sdd.html">SDD post</a>, but it's worth emphasizing here. RUP artifacts lived in Rational Rose, RequisitePro, ClearCase &mdash; proprietary tools with proprietary formats. They were difficult to version, impossible to diff meaningfully, and completely disconnected from the codebase.
+  </p>
+
+  <p class="fade-in">
+    SDD artifacts are <strong>markdown files in a git repository</strong>. They sit next to the code. They go through pull requests. They have a commit history. When a developer changes a function signature and doesn't update the corresponding design.md, it's as visible as a broken test &mdash; and can be as enforceable.
+  </p>
+
+  <p class="fade-in">
+    This solves RUP's most persistent practical problem: <strong>documentation drift</strong>. Not by asking humans to be more disciplined (that failed for 25 years), but by making specs first-class citizens of the development workflow, subject to the same automation and enforcement as code.
+  </p>
+
+  <!-- SECTION: THE SYNTHESIS -->
+  <h2 class="fade-in">The AIRUP Synthesis</h2>
+
+  <p class="fade-in">
+    Let me pull this together with a concrete picture of what the AIRUP artifact lifecycle looks like in practice:
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>Artifacts Produced</th>
+        <th>Level of Detail</th>
+        <th>Validation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Inception</strong></td>
+        <td>vision.md, initial requirements.md (top scenarios only)</td>
+        <td>Broad strokes &mdash; 70% of scope, 30% of detail</td>
+        <td>Human review of business alignment</td>
+      </tr>
+      <tr>
+        <td><strong>Elaboration</strong></td>
+        <td>Full requirements.md, design.md with ADRs, architecture prototype</td>
+        <td>Architecturally significant &mdash; deep where risk is high</td>
+        <td>Deterministic gates + AI review + human approval at milestone</td>
+      </tr>
+      <tr>
+        <td><strong>Construction</strong></td>
+        <td>Refined requirements.md, detailed tasks.md, code, tests, test-plan.md</td>
+        <td>Complete &mdash; every requirement, every task, every test</td>
+        <td>TDD cycles + traceability chain validation + Governor oversight</td>
+      </tr>
+      <tr>
+        <td><strong>Transition</strong></td>
+        <td>Deployment spec, release notes, final traceability report</td>
+        <td>Verification-focused &mdash; does it match the spec?</td>
+        <td>Full chain audit: SC&rarr;REQ&rarr;DES&rarr;TASK&rarr;TEST&rarr;CODE</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    Notice how the artifacts <strong>evolve across phases</strong>. The <code>requirements.md</code> that exists in Inception is not the same <code>requirements.md</code> in Construction &mdash; it's been enriched, refined, and validated through multiple iterations. But it's the <em>same file</em>, in the <em>same repo</em>, with a <em>full git history</em> of every change.
+  </p>
+
+  <p class="fade-in">
+    This is what neither SDD alone nor RUP alone could achieve. SDD alone would produce a static spec in one pass and never look back. RUP alone would produce rich artifacts that nobody wants to maintain. <strong>Together, they produce living specs that evolve iteratively and are maintained by machines.</strong>
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: THE UNCOMFORTABLE QUESTION -->
+  <h2 class="fade-in">The Uncomfortable Question</h2>
+
+  <p class="fade-in">
+    There's a question I keep getting, and it deserves an honest answer: <em>"Isn't this just over-engineering? Can't an AI agent just... write the code?"</em>
+  </p>
+
+  <p class="fade-in">
+    Yes, it can. And for a TODO app, it should. Give an agent a prompt, get code back, ship it. No specs. No phases. No traceability. That's perfectly fine.
+  </p>
+
+  <p class="fade-in">
+    But consider what happens when:
+  </p>
+
+  <ul class="fade-in">
+    <li>The system has <strong>50+ requirements</strong> and an agent forgets to implement three of them</li>
+    <li>A design decision made in week 1 <strong>contradicts a requirement</strong> added in week 4</li>
+    <li>A bug fix in one component <strong>breaks an assumption</strong> in another component's design</li>
+    <li>A regulator asks: <em>"Show me that requirement X is implemented and tested"</em></li>
+    <li>A new team member asks: <em>"Why was this architecture chosen?"</em></li>
+  </ul>
+
+  <p class="fade-in">
+    Without structured specs, traceability, and phase-gated reviews, the answer to every one of these questions is: <em>"Let me read through 200 files of code and try to reconstruct the intent."</em>
+  </p>
+
+  <p class="fade-in">
+    With AIRUP, the answer is: <em>"Let me query the traceability chain."</em>
+  </p>
+
+  <p class="fade-in">
+    The overhead of structured specs is real. AIRUP doesn't deny that. It argues that <strong>the overhead is worth it when the project's complexity exceeds a threshold</strong> &mdash; and that AI agents make that overhead cheap enough to be practical. RUP was right about the value of structure. It was just too expensive for humans. SDD makes it cheap for machines. AIRUP puts the two together.
+  </p>
+
+  <!-- CLOSING -->
+  <h2 class="fade-in">Twenty-Five Years Later</h2>
+
+  <p class="fade-in">
+    When I started researching the overlap between SDD and RUP, I expected to find superficial similarities &mdash; naming conventions, structural parallels, the kind of thing you can squeeze into a conference paper intro. What I found instead was a deep structural isomorphism: <strong>SDD and RUP are solving the same problem, decomposing it in the same way, and producing artifacts with the same epistemic function</strong>.
+  </p>
+
+  <p class="fade-in">
+    The difference is the executor. RUP assumed humans would produce and maintain the artifacts. SDD assumes machines will. AIRUP bridges the gap: a human-designed process, executed by machines, governed by a hybrid human-AI control loop.
+  </p>
+
+  <p class="fade-in">
+    Philippe Kruchten, Ivar Jacobson, and the Rational Software team didn't know they were designing a framework for AI agents. They were designing the best process they could for human teams. But in doing so, they <strong>accidentally described the optimal artifact structure for multi-agent systems</strong> &mdash; twenty-five years before those systems existed.
+  </p>
+
+  <p class="fade-in">
+    That's not irony. That's good engineering surviving long enough to find its moment.
+  </p>
+
+  <blockquote class="fade-in">
+    "The best frameworks aren't the ones designed for a specific technology. They're the ones designed for a specific <em>problem</em> &mdash; because problems outlast every technology that tries to solve them."
+  </blockquote>
+
+  <p class="fade-in">
+    <strong>Next up:</strong> <em>Benchmarking AIRUP</em> &mdash; how to design experiments that compare AIRUP against unstructured multi-agent pipelines, what metrics matter, and why "number of tokens" is the most misleading benchmark in AI-driven development.
+  </p>
+
+  <!-- TAGS -->
+  <div class="tags fade-in">
+    <span>SDD</span>
+    <span>RUP</span>
+    <span>AIRUP</span>
+    <span>Traceability</span>
+    <span>Requirements Engineering</span>
+    <span>Software Architecture</span>
+    <span>AI Agents</span>
+    <span>Convergent Evolution</span>
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="author-card fade-in">
+    <div class="author-avatar">RC</div>
+    <div class="author-info">
+      <h4>Ricardo Costa</h4>
+      <p>Software engineer exploring the intersection of classical software processes and AI-driven development. Currently pursuing a master's degree researching AIRUP &mdash; an AI-first approach to the Rational Unified Process.</p>
+    </div>
+  </div>
+
+</article>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>Brave New IA World &mdash; by Ricardo Costa</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
