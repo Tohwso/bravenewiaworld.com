@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../images/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png">
+<link rel="shortcut icon" href="../favicon.ico">
+<meta name="google-site-verification" content="_97oaFM1mLh87ahif6GDfBCdHq6wlog85WR5xPBgUyk">
+<title>Building an AIRUP Prototype — A Library System Case Study | Brave New IA World</title>
+<meta name="description" content="Three AI pipelines build the same library management system. One uses raw prompts. One uses SDD specs. One uses full AIRUP with governance. The results reveal what structured process actually buys you — including a surprise feature nobody asked for.">
+<meta name="author" content="Ricardo Costa">
+<meta name="keywords" content="AIRUP, prototype, case study, library system, multi-agent, SDD, RUP, AI Governor, pipeline comparison, scope creep, traceability, AI agents, software engineering">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building an AIRUP Prototype — A Library System Case Study">
+<meta property="og:description" content="Three AI pipelines build the same system. Raw prompts vs. SDD specs vs. full AIRUP. The results — including an agent that invented a feature nobody asked for.">
+<meta property="og:site_name" content="Brave New IA World">
+<meta property="og:url" content="https://bravenewiaworld.com/posts/006-building-an-airup-prototype.html">
+<meta property="og:image" content="https://bravenewiaworld.com/images/og-post-006.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Building an AIRUP Prototype — A Library System Case Study">
+<meta name="twitter:description" content="Three pipelines, one system, zero hand-holding. What happens when you let AI agents build a library management system with and without process governance?">
+<meta name="twitter:image" content="https://bravenewiaworld.com/images/og-post-006.png">
+<meta property="article:published_time" content="2026-04-13">
+<meta property="article:author" content="Ricardo Costa">
+<meta property="article:section" content="Software Engineering">
+<meta property="article:tag" content="AIRUP">
+<meta property="article:tag" content="Prototype">
+<meta property="article:tag" content="Case Study">
+<meta property="article:tag" content="Multi-Agent Systems">
+<meta property="article:tag" content="SDD">
+<link rel="canonical" href="https://bravenewiaworld.com/posts/006-building-an-airup-prototype.html">
+
+<!-- Structured Data: Article -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Building an AIRUP Prototype — A Library System Case Study",
+  "description": "Three AI pipelines build the same library management system. One uses raw prompts, one uses SDD specs, one uses full AIRUP. A practical comparison with real code, real metrics, and a surprise feature nobody requested.",
+  "url": "https://bravenewiaworld.com/posts/006-building-an-airup-prototype.html",
+  "datePublished": "2026-04-13",
+  "dateModified": "2026-04-13",
+  "author": {
+    "@type": "Person",
+    "name": "Ricardo Costa"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Brave New IA World"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://bravenewiaworld.com/posts/006-building-an-airup-prototype.html"
+  },
+  "keywords": ["AIRUP", "prototype", "case study", "library system", "multi-agent", "SDD", "RUP", "AI Governor", "scope creep", "traceability"],
+  "articleSection": "Software Engineering",
+  "wordCount": 4200,
+  "timeRequired": "PT16M"
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="blog-header">
+  <a href="/" class="blog-brand">Brave New IA World</a>
+  <nav class="blog-nav">
+    <a href="/">Home</a>
+    <a href="/#posts">Archive</a>
+    <span class="tag">Post #006</span>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero-post">
+  <div class="hero-label">Post #006 &mdash; The AIRUP Series</div>
+  <h1>Building an <span class="highlight">AIRUP</span> Prototype</h1>
+  <p class="hero-subtitle">Three pipelines build the same library system. One invents a feature nobody asked for. This is what "show, don't tell" looks like.</p>
+  <div class="hero-meta">
+    <span>Ricardo Costa</span>
+    <span class="dot"></span>
+    <span>~16 min read</span>
+    <span class="dot"></span>
+    <time datetime="2026-04-13">April 2026</time>
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<article class="article">
+
+  <p class="lead fade-in">
+    Five posts of theory. <a href="001-can-ai-resurrect-rup.html">RUP can be resurrected</a>. <a href="002-what-is-sdd.html">SDD provides the fuel</a>. <a href="003-the-ai-governor-pattern.html">The Governor prevents waste</a>. <a href="004-sdd-meets-rup.html">The mapping isn't accidental</a>. <a href="005-benchmarking-airup.html">Here's how we'll measure it</a>. All sound arguments. All untested. Today, we test them. One system. Three pipelines. Zero hand-holding.
+  </p>
+
+  <!-- SECTION: THE FEATURE -->
+  <h2 class="fade-in">The Feature: A Library Management System</h2>
+
+  <p class="fade-in">
+    The system is deliberately boring. A <strong>virtual library</strong> &mdash; the kind of project you'd assign in a university course. Catalog books. Register readers. Process loans and returns. Handle overdue items. Manage reservations.
+  </p>
+
+  <p class="fade-in">
+    Boring is the point. The domain is universally understood. Nobody needs to Google "what is a library loan" or "how does a late fee work." This eliminates domain knowledge as a confounding variable and lets us focus entirely on what matters: <strong>how does the process affect the output?</strong>
+  </p>
+
+  <p class="fade-in">
+    But "boring" doesn't mean "trivial." A library system has genuine complexity hiding under its familiar surface:
+  </p>
+
+  <ul class="fade-in">
+    <li>A <strong>state machine</strong> for books: Available &rarr; Reserved &rarr; Borrowed &rarr; Returned, with an Overdue branch that triggers penalties</li>
+    <li><strong>Business rules</strong> with edge cases: maximum concurrent loans, reservation queues, grace periods, late fee calculation</li>
+    <li><strong>Cross-entity constraints</strong>: a reader can't borrow a book that's reserved by someone else; returning a reserved book should notify the next reader in queue</li>
+    <li><strong>Temporal logic</strong>: due dates, overdue detection, renewal limits</li>
+  </ul>
+
+  <p class="fade-in">
+    In the <a href="005-benchmarking-airup.html">benchmarking post</a>, I defined selection criteria: 15-30 requirements, 2-3 components, non-trivial business rules, domain-neutral, testable. The library system checks every box.
+  </p>
+
+  <p class="fade-in">
+    Every pipeline received the same initial prompt:
+  </p>
+
+  <blockquote class="fade-in">
+    "Build a library management system. It should manage a catalog of books, register readers, handle book loans (borrow/return), calculate late fees for overdue books, support book reservations with a waitlist, and enforce a maximum of 3 concurrent loans per reader."
+  </blockquote>
+
+  <p class="fade-in">
+    That's it. Same words. Same expectations. Three very different journeys.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: PIPELINE U -->
+  <h2 class="fade-in">Pipeline U: The Vibe Code</h2>
+
+  <p class="fade-in">
+    Pipeline U is the baseline: a single agent receives the prompt and generates code directly. No specs. No phases. No review. Just <em>"here's what I want, build it."</em>
+  </p>
+
+  <p class="fade-in">
+    The agent produced a working system in minutes. Models for Book, Reader, and Loan. REST endpoints for CRUD operations. A loan service with borrow and return logic. Even basic test files.
+  </p>
+
+  <p class="fade-in">
+    First impression: <strong>impressive</strong>. The code ran. Tests passed. You could borrow a book and return it. If you squinted, it looked done.
+  </p>
+
+  <p class="fade-in">
+    Then I looked closer.
+  </p>
+
+  <h3 class="fade-in">What Pipeline U Missed</h3>
+
+  <ul class="fade-in">
+    <li><strong>No reservation system.</strong> The prompt mentioned "book reservations with a waitlist." The agent implemented a <code>reserve</code> endpoint that marked a book as reserved &mdash; but there was no queue. If two readers reserved the same book, the second reservation silently overwrote the first. No waitlist. No notification.</li>
+    <li><strong>No late fee calculation.</strong> The prompt said "calculate late fees." The agent added a <code>lateFee</code> field to the Loan model &mdash; but never populated it. The field was always zero. No overdue detection logic existed.</li>
+    <li><strong>No concurrent loan limit.</strong> The prompt specified "maximum of 3 concurrent loans per reader." The agent never checked this. A reader could borrow 100 books.</li>
+    <li><strong>No state machine.</strong> Books had a <code>status</code> field, but nothing prevented impossible transitions &mdash; you could "return" a book that was never borrowed, or "borrow" a book that was already on loan.</li>
+  </ul>
+
+  <p class="fade-in">
+    The pattern was exactly what I described in the <a href="005-benchmarking-airup.html">benchmarking post</a> as <strong>silent scope omission</strong>: the output <em>looked</em> complete, passed a casual review, but quietly dropped 40% of the requirements. The agent implemented the obvious features (CRUD, basic loan flow) and skipped the subtle ones (queues, constraints, temporal logic).
+  </p>
+
+  <p class="fade-in">
+    Across three runs of Pipeline U, the pattern was consistent: <strong>55-65% of the intended functionality was implemented</strong>. The remainder was either missing entirely or present as stub code with no actual logic.
+  </p>
+
+  <div class="callout fade-in">
+    <h4>The Vibe Code Verdict</h4>
+    <p>
+      Pipeline U is fast, cheap, and dangerously plausible. It produces something that looks like a working system, passes the "does it run?" test, and would likely survive a demo. It would not survive a user trying to reserve a book.
+    </p>
+  </div>
+
+  <!-- SECTION: PIPELINE S -->
+  <h2 class="fade-in">Pipeline S: SDD Without Governance</h2>
+
+  <p class="fade-in">
+    Pipeline S adds structured specifications: <code>requirements.md</code> &rarr; <code>design.md</code> &rarr; <code>tasks.md</code> &rarr; code. Multiple agents, each handling a phase. But no RUP phases, no Governor, no quality gates between artifacts.
+  </p>
+
+  <p class="fade-in">
+    The requirements agent produced 22 requirements, covering all six feature areas from the prompt. The design agent created interface contracts and a data model. The task agent decomposed into 18 atomic tasks. The implementation agent wrote the code.
+  </p>
+
+  <p class="fade-in">
+    Results were measurably better than Pipeline U:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>Reservations:</strong> Implemented with a proper queue. When a book was returned, the next reader in the queue was flagged (though no notification mechanism existed).</li>
+    <li><strong>Late fees:</strong> Implemented with a per-day penalty calculation. Overdue detection worked.</li>
+    <li><strong>Concurrent loan limit:</strong> Enforced. The agent checked active loans before allowing a new borrow.</li>
+    <li><strong>State machine:</strong> Partially implemented. Most invalid transitions were blocked, but one edge case slipped through: a reader could reserve a book they already had on loan.</li>
+  </ul>
+
+  <p class="fade-in">
+    <strong>Scope coverage jumped from ~60% (Pipeline U) to ~85% (Pipeline S).</strong> The specs worked &mdash; having explicit requirements forced the implementation agent to address each one.
+  </p>
+
+  <h3 class="fade-in">The Drift Problem</h3>
+
+  <p class="fade-in">
+    But Pipeline S introduced a new failure mode: <strong>spec-code drift</strong>. Without quality gates between phases, inconsistencies accumulated:
+  </p>
+
+  <p class="fade-in">
+    The <code>requirements.md</code> specified late fees as <em>"$0.25 per day, calculated from the day after the due date."</em> The <code>design.md</code> described the fee calculation as <em>"configurable per-day rate, applied from the due date."</em> The implementation used the design's interpretation &mdash; off by one day and with a configurability feature that nobody requested.
+  </p>
+
+  <p class="fade-in">
+    This is the spec-code drift I warned about in the <a href="005-benchmarking-airup.html">benchmarking post</a>. Each phase slightly reinterprets the previous one. Requirements say X. Design says "X, but slightly different." Code follows design. By the end, the implementation doesn't match the original requirement &mdash; and nobody notices because nobody checked.
+  </p>
+
+  <p class="fade-in">
+    In Pipeline S, the <strong>spec existed but wasn't enforced</strong>. It was a suggestion, not a contract.
+  </p>
+
+  <!-- SECTION: PIPELINE A -->
+  <h2 class="fade-in">Pipeline A: Full AIRUP</h2>
+
+  <p class="fade-in">
+    Pipeline A is the full treatment: SDD specs embedded in RUP's four-phase lifecycle, governed by the AI Governor, with deterministic quality gates between every artifact.
+  </p>
+
+  <p class="fade-in">
+    Let me walk through the phases.
+  </p>
+
+  <h3 class="fade-in">Inception: Scoping the Problem</h3>
+
+  <p class="fade-in">
+    The <strong>@business-analyst</strong> agent parsed the prompt and produced a vision document: problem statement, stakeholders (librarian, reader, system admin), and a preliminary scope. The <strong>@requirements</strong> agent generated 8 high-level scenarios (BDD format: Given/When/Then). The Governor reviewed for feasibility and flagged the scope as "medium complexity &mdash; suitable for single-iteration construction."
+  </p>
+
+  <p class="fade-in">
+    Time: ~2 minutes. Output: <code>vision.md</code> + 8 scenarios in <code>requirements.md</code> (draft).
+  </p>
+
+  <h3 class="fade-in">Elaboration: Architecture and Risk</h3>
+
+  <p class="fade-in">
+    The <strong>@requirements</strong> agent expanded the 8 scenarios into 24 formal requirements using EARS notation. Each requirement got an ID (<code>REQ-001</code> through <code>REQ-024</code>), a priority (Must/Should/Could), and a reference to the scenario that motivated it.
+  </p>
+
+  <p class="fade-in">
+    <strong>Deterministic gate #1:</strong> The Governor ran a traceability check. Result: all 8 scenarios were covered by at least one requirement. All requirement IDs were unique. EARS syntax valid for 23 of 24 &mdash; one requirement was rephrased.
+  </p>
+
+  <p class="fade-in">
+    The <strong>@architect</strong> agent produced a <code>design.md</code> with 12 design decisions (<code>DES-001</code> through <code>DES-012</code>): component structure, data model, API contracts, state machine definition, fee calculation formula. Each decision referenced the requirements it addressed.
+  </p>
+
+  <p class="fade-in">
+    <strong>Deterministic gate #2:</strong> Cross-reference check. Result: every <code>DES-N</code> referenced at least one <code>REQ-N</code>. But two requirements (<code>REQ-019</code>: renewal limits, <code>REQ-022</code>: reader notification on reservation availability) had no corresponding design decision. <strong>The gate caught them.</strong> The architect agent was re-invoked to address the gap, producing <code>DES-013</code> and <code>DES-014</code>.
+  </p>
+
+  <p class="fade-in">
+    Without this gate, those two requirements would have silently fallen through the cracks &mdash; exactly as they did in Pipeline S.
+  </p>
+
+  <h3 class="fade-in">Construction: TDD with Traceability</h3>
+
+  <p class="fade-in">
+    The <strong>@implementer</strong> agent decomposed the design into 20 tasks (<code>TASK-001</code> through <code>TASK-020</code>), ordered by architectural layer: domain entities first, then services, then API endpoints.
+  </p>
+
+  <p class="fade-in">
+    <strong>Deterministic gate #3:</strong> Traceability check. Every <code>TASK-N</code> referenced at least one <code>DES-N</code>. No orphan tasks. No orphan requirements. The full chain &mdash; <code>SC &rarr; REQ &rarr; DES &rarr; TASK</code> &mdash; was intact.
+  </p>
+
+  <p class="fade-in">
+    Implementation followed a TDD cycle per task: write test, run test (fail), implement, run test (pass), next task. The Governor monitored iteration counts per task and invoked the circuit breaker twice when the implementer entered a refinement loop on edge case handling.
+  </p>
+
+  <p class="fade-in">
+    Final result: <strong>24 of 24 requirements implemented. 20 of 20 tasks completed. 47 tests, all passing.</strong> State machine fully enforced. Late fee calculation matched the spec exactly ($0.25/day, starting the day after due date). Reservation queue working with proper ordering. Concurrent loan limit enforced.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: THE RANKING INCIDENT -->
+  <h2 class="fade-in">The Ranking Incident</h2>
+
+  <p class="fade-in">
+    Now for the best part.
+  </p>
+
+  <p class="fade-in">
+    During one of my earlier proof-of-concept runs (before the formal experiment), I used an ungoverned pipeline to build the library system. The agent produced everything I asked for &mdash; and then, unbidden, it implemented a <strong>reader ranking system</strong>. A leaderboard that tracked total pages read per year, calculated from loan history and book metadata, with endpoints for "top readers this month" and "reading streak."
+  </p>
+
+  <p class="fade-in">
+    Nobody asked for this. Not in the prompt. Not in any requirement. The agent decided &mdash; based on its training data about library systems &mdash; that a reader ranking was a good idea. And honestly? <strong>It was a good idea.</strong> It was well-implemented, well-tested, and genuinely useful.
+  </p>
+
+  <p class="fade-in">
+    It was also completely outside the scope.
+  </p>
+
+  <p class="fade-in">
+    This is the most interesting moment in the entire experiment, because it illuminates a fundamental question about AI-driven development: <strong>when an agent adds scope, is that creativity or scope creep?</strong>
+  </p>
+
+  <h3 class="fade-in">How Each Pipeline Handles Uninvited Features</h3>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>Pipeline</th>
+        <th>What Happens</th>
+        <th>Outcome</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="role-agent">Pipeline U</td>
+        <td>Agent adds the ranking. No spec to check against. No gate to flag it. It ships.</td>
+        <td>Scope creep goes undetected. You discover it in code review &mdash; or in production.</td>
+      </tr>
+      <tr>
+        <td class="role-agent">Pipeline S</td>
+        <td>Agent adds the ranking. The requirement doesn't exist in requirements.md, but nobody checks. It ships.</td>
+        <td>Spec exists but isn't enforced. The ranking survives because the spec is advisory, not authoritative.</td>
+      </tr>
+      <tr>
+        <td class="role-agent">Pipeline A</td>
+        <td>Agent adds TASK-021 for ranking. Deterministic gate fires: "TASK-021 does not reference any DES-N." Governor escalates to human.</td>
+        <td>Human decides: "Good idea &mdash; add REQ-025 and DES-015" <strong>or</strong> "Out of scope &mdash; remove."</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    Pipeline A doesn't prevent the agent from having ideas. It prevents ideas from <strong>bypassing the governance structure</strong>. The ranking feature isn't killed &mdash; it's surfaced. The human makes an informed decision with full context: here's what the agent wants to add, here's the scope it was given, do you want to expand the scope?
+  </p>
+
+  <blockquote class="fade-in">
+    "The best process doesn't suppress creativity. It channels it through a gate where a human can say yes or no &mdash; with enough context to decide wisely."
+  </blockquote>
+
+  <p class="fade-in">
+    This is, I think, the single strongest argument for AIRUP's governance model. Not cost control. Not loop prevention. <strong>The ability to distinguish between valuable proactivity and invisible scope creep</strong> &mdash; and to let a human make that call.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: RESULTS -->
+  <h2 class="fade-in">Comparative Results</h2>
+
+  <p class="fade-in">
+    Here are the aggregated results across three runs per pipeline, using the <a href="005-benchmarking-airup.html">metrics framework</a> from the previous post:
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Pipeline U</th>
+        <th>Pipeline S</th>
+        <th>Pipeline A</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Total tokens</strong> (mean)</td>
+        <td>~180K</td>
+        <td>~620K</td>
+        <td>~710K</td>
+      </tr>
+      <tr>
+        <td><strong>Scope coverage</strong></td>
+        <td>60%</td>
+        <td>85%</td>
+        <td>100%</td>
+      </tr>
+      <tr>
+        <td><strong>Cost Efficiency Ratio</strong><br><small style="color:var(--text-dim);">tokens / verified requirement</small></td>
+        <td>~20K</td>
+        <td>~36K</td>
+        <td>~30K</td>
+      </tr>
+      <tr>
+        <td><strong>Waste ratio</strong></td>
+        <td>~5%</td>
+        <td>~22%</td>
+        <td>~8%</td>
+      </tr>
+      <tr>
+        <td><strong>Test pass rate</strong></td>
+        <td>92%</td>
+        <td>88%</td>
+        <td>100%</td>
+      </tr>
+      <tr>
+        <td><strong>Traceability coverage</strong></td>
+        <td>N/A</td>
+        <td>72%</td>
+        <td>100%</td>
+      </tr>
+      <tr>
+        <td><strong>Orphan rate</strong></td>
+        <td>N/A</td>
+        <td>3 orphans</td>
+        <td>0 orphans</td>
+      </tr>
+      <tr>
+        <td><strong>Defect escape rate</strong></td>
+        <td>~6 defects</td>
+        <td>~3 defects</td>
+        <td>~1 defect</td>
+      </tr>
+      <tr>
+        <td><strong>Architecture fitness</strong><br><small style="color:var(--text-dim);">blinded review, 1-5</small></td>
+        <td>2.8</td>
+        <td>3.4</td>
+        <td>4.2</td>
+      </tr>
+      <tr>
+        <td><strong>Wall-clock time</strong></td>
+        <td>~8 min</td>
+        <td>~25 min</td>
+        <td>~35 min</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    Let me highlight the numbers that matter most.
+  </p>
+
+  <h3 class="fade-in">The CER Surprise</h3>
+
+  <p class="fade-in">
+    Pipeline U used only 180K tokens &mdash; the cheapest by far. But it only verified 9 of 24 intended requirements (the ones it actually implemented correctly). Its CER is ~20K tokens per verified requirement.
+  </p>
+
+  <p class="fade-in">
+    Pipeline A used 710K tokens &mdash; 4x more. But it verified all 24 requirements. Its CER is ~30K tokens per verified requirement. <strong>Pipeline A is only 50% more expensive per unit of quality than Pipeline U, while delivering 167% more verified outcomes.</strong>
+  </p>
+
+  <p class="fade-in">
+    Pipeline S is the interesting middle ground. It used 620K tokens but verified only ~20 requirements (the others had spec-code drift or gaps). Its CER is the worst at ~36K &mdash; it spent almost as many tokens as Pipeline A but delivered less verified output. <strong>SDD without governance is the most expensive approach per unit of quality.</strong>
+  </p>
+
+  <div class="callout fade-in">
+    <h4>The Core Finding</h4>
+    <p>
+      Adding governance (Pipeline S &rarr; Pipeline A) cost only ~15% more tokens but eliminated spec-code drift, closed all traceability gaps, and caught 2 requirements that would otherwise have been silently dropped. <strong>The Governor's overhead paid for itself many times over in quality.</strong>
+    </p>
+    <p>
+      The waste ratio tells the same story: Pipeline S wasted 22% of its tokens on circular refinement loops. The Governor's circuit breaker cut Pipeline A's waste to 8%. Those recovered tokens were redirected to actual implementation work.
+    </p>
+  </div>
+
+  <h3 class="fade-in">The Waste Paradox</h3>
+
+  <p class="fade-in">
+    Pipeline U has the lowest waste ratio (5%) &mdash; but that's misleading. Pipeline U wastes almost nothing because it <em>does almost nothing</em>. It doesn't iterate, doesn't refine, doesn't validate. Low waste, low output. Like a student who writes one paragraph and calls the essay done &mdash; technically no wasted words, but also no essay.
+  </p>
+
+  <p class="fade-in">
+    Pipeline S has the highest waste ratio (22%) because its agents iterate without boundaries. They debate formatting. They refine error messages. They cycle through three versions of a function signature. All legitimate work, none of it wasteful in isolation &mdash; but collectively, it represents tokens spent on <strong>diminishing returns</strong>.
+  </p>
+
+  <p class="fade-in">
+    Pipeline A sits at 8% &mdash; the Governor's circuit breaker allows 2-3 iterations for convergence, then cuts. The waste that remains is genuine exploration (trying two approaches to an algorithm, evaluating two data models). Healthy waste. The kind that leads to better decisions.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: ARCHITECTURE -->
+  <h2 class="fade-in">Inside the Prototype</h2>
+
+  <p class="fade-in">
+    For readers who want to understand the engineering, here's a sketch of the AIRUP prototype architecture. This is not production software &mdash; it's a research tool designed for reproducibility and instrumentation.
+  </p>
+
+  <h3 class="fade-in">The Agent Graph</h3>
+
+  <p class="fade-in">
+    The pipeline is implemented as a directed acyclic graph (DAG) of agent invocations. Each node is an agent with a defined role, a specific prompt template, and a set of allowed tools. Edges represent artifact dependencies.
+  </p>
+
+  <div class="diagram fade-in">
+    <div class="diagram-title">AIRUP Agent Pipeline</div>
+    <div class="phase-flow">
+      <div class="phase-box" style="border-color:var(--accent);background:rgba(108,99,255,0.08);">Governor<br><small style="color:var(--text-dim);font-size:11px;">Orchestrate</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Requirements<br><small style="color:var(--text-dim);font-size:11px;">specs</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Architect<br><small style="color:var(--text-dim);font-size:11px;">design</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Implementer<br><small style="color:var(--text-dim);font-size:11px;">code + tests</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">Quality<br><small style="color:var(--text-dim);font-size:11px;">verify</small></div>
+    </div>
+  </div>
+
+  <p class="fade-in">
+    The Governor node wraps every other node. Before each agent invocation, the Governor: (1) selects the model tier, (2) assembles the minimal context, (3) injects cached decisions. After each invocation, it: (4) runs deterministic validations, (5) evaluates convergence, (6) decides whether to proceed, re-invoke, or escalate.
+  </p>
+
+  <h3 class="fade-in">The Decision Log</h3>
+
+  <p class="fade-in">
+    One of the most useful data structures in the prototype is the <strong>decision log</strong> &mdash; an append-only list of resolved decisions that grows throughout the pipeline. When the architect decides "use an in-memory SQLite database," that decision becomes a fact:
+  </p>
+
+  <p class="fade-in" style="font-family:var(--mono);font-size:14px;color:var(--accent-secondary);background:var(--bg-card);padding:16px 20px;border-radius:8px;border:1px solid var(--border);">
+    DEC-004 | @architect | "Database: SQLite in-memory for prototype scope" | refs: DES-002
+  </p>
+
+  <p class="fade-in">
+    Every subsequent agent receives relevant decisions as context facts. The implementer doesn't need to re-derive the database choice &mdash; it's injected. The quality agent doesn't need to question it &mdash; it's a settled decision with a clear author and rationale.
+  </p>
+
+  <p class="fade-in">
+    In my runs, the decision log prevented an average of <strong>4-6 re-derivations per pipeline execution</strong> &mdash; cases where an agent would have spent 500-1,000 tokens re-analyzing a question that was already answered.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: LESSONS -->
+  <h2 class="fade-in">Seven Lessons from Building the Prototype</h2>
+
+  <h3 class="fade-in">1. Deterministic gates are the highest-ROI component</h3>
+  <p class="fade-in">
+    Zero tokens. Milliseconds of execution. Caught 3-5 structural issues per run that would otherwise have propagated into code. If I could keep only one piece of AIRUP, it would be the deterministic traceability validation between phases.
+  </p>
+
+  <h3 class="fade-in">2. The Governor's biggest value isn't cost &mdash; it's escalation</h3>
+  <p class="fade-in">
+    I built the Governor expecting its main contribution to be token savings through tiered routing. In practice, its most valuable function was <strong>knowing when to stop and ask a human</strong>. The ranking incident. The two orphan requirements. The circular refinement loop. Each time, the Governor's intervention prevented a problem that tokens alone couldn't solve.
+  </p>
+
+  <h3 class="fade-in">3. SDD without governance is worse than no SDD</h3>
+  <p class="fade-in">
+    This was the most surprising result. Pipeline S (SDD without governance) had the <strong>worst cost efficiency ratio</strong> of all three pipelines. It spent nearly as many tokens as Pipeline A but delivered measurably less quality. The specs created a false sense of completeness while introducing drift. If you're going to write specs, you need to enforce them. Otherwise, you're just generating documentation that nobody reads.
+  </p>
+
+  <h3 class="fade-in">4. Agents are excellent at CRUD, terrible at constraints</h3>
+  <p class="fade-in">
+    Across all pipelines, agents consistently implemented the "happy path" (create book, borrow book, return book) and consistently struggled with constraints (max concurrent loans, reservation priority, state machine transitions). This suggests that <strong>the primary value of structured requirements is in making constraints explicit</strong> &mdash; the obvious behavior would be implemented anyway.
+  </p>
+
+  <h3 class="fade-in">5. The decision log is underrated</h3>
+  <p class="fade-in">
+    I almost cut this feature from the prototype as "nice to have." It turned out to be essential. Without it, agents in Pipeline S re-derived the same architectural decisions 2-3 times across the pipeline, spending ~15% of their total tokens on questions that were already answered.
+  </p>
+
+  <h3 class="fade-in">6. Wall-clock time is the wrong optimization target</h3>
+  <p class="fade-in">
+    Pipeline U took 8 minutes. Pipeline A took 35 minutes. A 4x slowdown sounds bad until you realize that Pipeline A produces a system with full traceability, complete scope coverage, and documented architecture. The alternative &mdash; building with Pipeline U and then spending hours debugging missing features &mdash; is slower in total, even though it's faster in the first pass.
+  </p>
+
+  <h3 class="fade-in">7. The experiment design from Post #005 held up</h3>
+  <p class="fade-in">
+    The three-pipeline comparison, the nine metrics, the pre-registered hypotheses &mdash; they all worked as designed. The threats I identified (LLM non-determinism, feature selection bias, experimenter effect) were real but manageable. The methodology is sound for a thesis defense.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: CLOSING -->
+  <h2 class="fade-in">From Prototype to Thesis</h2>
+
+  <p class="fade-in">
+    This prototype is not AIRUP in its final form. It's a research instrument &mdash; built to test hypotheses, not to ship products. The agent prompts are not optimized. The Governor's decision logic is simple rule-based, not learned. The feature set is limited to a library system.
+  </p>
+
+  <p class="fade-in">
+    But the signal is clear. <strong>Structured specifications, embedded in an iterative process with automated governance, produce measurably better outcomes than unstructured or ungoverned alternatives.</strong> The improvement is not dramatic in any single dimension &mdash; it's cumulative across scope coverage, quality, waste reduction, and architectural fitness.
+  </p>
+
+  <p class="fade-in">
+    The ranking incident alone justifies the governance model. In a world where AI agents can and will add features you didn't ask for, having a structural mechanism to <strong>surface those additions and route them through human judgment</strong> is not overhead. It's a safety net.
+  </p>
+
+  <p class="fade-in">
+    RUP gave us the process structure. SDD gave us the spec format. The Governor gave us the economics. The library system gave us the evidence.
+  </p>
+
+  <blockquote class="fade-in">
+    "Theory without evidence is philosophy. Evidence without theory is data. A thesis needs both &mdash; and a library system to tie them together."
+  </blockquote>
+
+  <p class="fade-in">
+    <strong>Next up:</strong> <em>The Economics of AI-Driven Development</em> &mdash; what these experiments tell us about the real cost of AI-driven software development, why "tokens per feature" is the new "story points," and whether formal processes are economically viable when the executor is a machine.
+  </p>
+
+  <!-- TAGS -->
+  <div class="tags fade-in">
+    <span>AIRUP</span>
+    <span>Prototype</span>
+    <span>Case Study</span>
+    <span>Library System</span>
+    <span>Multi-Agent Systems</span>
+    <span>Scope Creep</span>
+    <span>Traceability</span>
+    <span>SDD</span>
+    <span>AI Governor</span>
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="author-card fade-in">
+    <div class="author-avatar">RC</div>
+    <div class="author-info">
+      <h4>Ricardo Costa</h4>
+      <p>Software engineer exploring the intersection of classical software processes and AI-driven development. Currently pursuing a master's degree researching AIRUP &mdash; an AI-first approach to the Rational Unified Process.</p>
+    </div>
+  </div>
+
+</article>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>Brave New IA World &mdash; by Ricardo Costa</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
