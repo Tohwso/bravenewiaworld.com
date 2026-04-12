@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../images/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon.png">
+<link rel="shortcut icon" href="../favicon.ico">
+<meta name="google-site-verification" content="_97oaFM1mLh87ahif6GDfBCdHq6wlog85WR5xPBgUyk">
+<title>The RUP AI Kit — Six Agents, One Pipeline, Zero Meetings | Brave New IA World</title>
+<meta name="description" content="A behind-the-scenes look at the AIRUP implementation: six AI agents (Governor, Business Analyst, Requirements Analyst, Architect, Developer, QA), the artifacts they produce, the Progression Protocol that prevents amnesia between phases, and real results from a brownfield reverse engineering project.">
+<meta name="author" content="Ricardo Costa">
+<meta name="keywords" content="RUP AI Kit, AIRUP, AI agents, Governor, Business Analyst, Requirements Analyst, Architect, Developer, QA, Progression Protocol, SDD, multi-agent systems, software engineering, brownfield, reverse engineering">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The RUP AI Kit — Six Agents, One Pipeline, Zero Meetings">
+<meta property="og:description" content="Behind the scenes of AIRUP: six agents, their artifacts, the Progression Protocol, and what happened when we ran it on a real brownfield codebase.">
+<meta property="og:site_name" content="Brave New IA World">
+<meta property="og:url" content="https://bravenewiaworld.com/posts/007-the-rup-ai-kit.html">
+<meta property="og:image" content="https://bravenewiaworld.com/images/og-post-007.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The RUP AI Kit — Six Agents, One Pipeline, Zero Meetings">
+<meta name="twitter:description" content="Six AI agents. One pipeline. The actual implementation of AIRUP — agents, artifacts, protocols, and a real brownfield case.">
+<meta name="twitter:image" content="https://bravenewiaworld.com/images/og-post-007.png">
+<meta property="article:published_time" content="2026-04-13">
+<meta property="article:author" content="Ricardo Costa">
+<meta property="article:section" content="Software Engineering">
+<meta property="article:tag" content="RUP AI Kit">
+<meta property="article:tag" content="AIRUP">
+<meta property="article:tag" content="Multi-Agent Systems">
+<meta property="article:tag" content="Progression Protocol">
+<meta property="article:tag" content="Brownfield">
+<link rel="canonical" href="https://bravenewiaworld.com/posts/007-the-rup-ai-kit.html">
+
+<!-- Structured Data: Article -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "The RUP AI Kit — Six Agents, One Pipeline, Zero Meetings",
+  "description": "A behind-the-scenes look at the AIRUP implementation: six AI agents, their artifacts, the Progression Protocol, and real results from a brownfield reverse engineering project.",
+  "url": "https://bravenewiaworld.com/posts/007-the-rup-ai-kit.html",
+  "datePublished": "2026-04-13",
+  "dateModified": "2026-04-13",
+  "author": {
+    "@type": "Person",
+    "name": "Ricardo Costa"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Brave New IA World"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://bravenewiaworld.com/posts/007-the-rup-ai-kit.html"
+  },
+  "keywords": ["RUP AI Kit", "AIRUP", "AI agents", "Governor", "Progression Protocol", "SDD", "multi-agent", "brownfield", "reverse engineering"],
+  "articleSection": "Software Engineering",
+  "wordCount": 3600,
+  "timeRequired": "PT14M"
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="blog-header">
+  <a href="/" class="blog-brand">Brave New IA World</a>
+  <nav class="blog-nav">
+    <a href="/">Home</a>
+    <a href="/#posts">Archive</a>
+    <span class="tag">Post #007</span>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero-post">
+  <div class="hero-label">Post #007 &mdash; Behind the Scenes</div>
+  <h1>The <span class="highlight">RUP AI Kit</span></h1>
+  <p class="hero-subtitle">Six agents. One pipeline. Zero meetings. A tour of the actual machinery that makes AIRUP work &mdash; the agents, their artifacts, and the protocol that keeps them from losing context.</p>
+  <div class="hero-meta">
+    <span>Ricardo Costa</span>
+    <span class="dot"></span>
+    <span>~14 min read</span>
+    <span class="dot"></span>
+    <time datetime="2026-04-13">April 2026</time>
+  </div>
+</section>
+
+<!-- ARTICLE -->
+<article class="article">
+
+  <p class="lead fade-in">
+    The previous posts built the case for <em>why</em> AIRUP works. This one shows <em>what it looks like</em>. Consider this a tour of the factory floor &mdash; the agents, the artifacts they produce, the directory structure they populate, and the protocol that prevents information from getting lost between phases. No theory today. Just the machinery.
+  </p>
+
+  <!-- SECTION: THE CAST -->
+  <h2 class="fade-in">The Cast</h2>
+
+  <p class="fade-in">
+    The RUP AI Kit has six agents. Five are direct mappings of classical RUP roles. One &mdash; the Governor &mdash; is new, as I explained in <a href="003-the-ai-governor-pattern.html">Post #003</a>. Each agent has a persona, a defined scope, and clear boundaries on what it can and cannot do.
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Agent</th>
+        <th>RUP Role</th>
+        <th>Produces</th>
+        <th>Cannot Do</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>👑</td>
+        <td class="role-agent">Governor</td>
+        <td><em>New role (no RUP equivalent)</em></td>
+        <td>progression.md, routing decisions, escalations</td>
+        <td>Write specs, code, or tests. Only orchestrates.</td>
+      </tr>
+      <tr>
+        <td>📋</td>
+        <td class="role-agent">Business Analyst</td>
+        <td>Business Analyst</td>
+        <td>vision.md, glossary.md, stakeholders.md, business-rules.md, business-processes.md</td>
+        <td>Write requirements, design, or code.</td>
+      </tr>
+      <tr>
+        <td>📋</td>
+        <td class="role-agent">Requirements Analyst</td>
+        <td>Requirements Specifier</td>
+        <td>requirements.md, use_cases.md</td>
+        <td>Make architecture decisions or write code.</td>
+      </tr>
+      <tr>
+        <td>🏛️</td>
+        <td class="role-agent">Architect</td>
+        <td>Software Architect</td>
+        <td>architecture.md, design_decisions.md, sequence_diagrams.md, deployment.md</td>
+        <td>Write implementation code or tests.</td>
+      </tr>
+      <tr>
+        <td>🔀</td>
+        <td class="role-agent">Developer</td>
+        <td>Developer</td>
+        <td>Source code, TDD scaffolds in tests/dev/, implementation notes</td>
+        <td>Write verification tests. Only dev scaffolds.</td>
+      </tr>
+      <tr>
+        <td>🧪</td>
+        <td class="role-agent">QA Analyst</td>
+        <td>Tester</td>
+        <td>traceability_matrix.md, test_plan.md, verification_report.md, tests in tests/qa/</td>
+        <td>Fix bugs or modify source code.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="fade-in">
+    The "Cannot Do" column is as important as the "Produces" column. <strong>Role separation is enforced, not suggested.</strong> The Developer writes code but cannot write verification tests &mdash; that's the QA's job. The QA can write independent tests in <code>tests/qa/</code> but cannot modify the Developer's code. The Governor orchestrates but never produces artifacts directly. These boundaries prevent the kind of role confusion that plagues ungoverned multi-agent systems, where every agent tries to do everything.
+  </p>
+
+  <blockquote class="fade-in">
+    "In a team of humans, role boundaries are social conventions. In a team of AI agents, they're system constraints. The latter is more reliable."
+  </blockquote>
+
+  <!-- SECTION: THE DIRECTORY -->
+  <h2 class="fade-in">The SDD Directory Structure</h2>
+
+  <p class="fade-in">
+    Every project managed by the RUP AI Kit follows a standard directory layout. The specification artifacts live in <code>spec/docs/</code>, organized by RUP discipline. The code lives in <code>src/</code>. Tests are split between <code>tests/dev/</code> (Developer's TDD scaffolds) and <code>tests/qa/</code> (QA's independent verification tests).
+  </p>
+
+  <div class="callout fade-in">
+    <h4>The SDD Tree</h4>
+    <p style="font-family:var(--mono);font-size:13px;line-height:2;color:var(--accent-secondary);">
+      spec/docs/<br>
+      &nbsp;&nbsp;00-overview/ &nbsp;&nbsp;&nbsp;&rarr; progression.md<br>
+      &nbsp;&nbsp;01-business/ &nbsp;&nbsp;&nbsp;&rarr; vision, glossary, stakeholders, rules, processes<br>
+      &nbsp;&nbsp;02-requirements/ &rarr; requirements.md, use_cases.md<br>
+      &nbsp;&nbsp;03-design/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr; architecture, decisions, sequences<br>
+      &nbsp;&nbsp;04-implementation/ &rarr; implementation notes, conventions<br>
+      &nbsp;&nbsp;05-test/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr; traceability matrix, test plan, verification report<br>
+      &nbsp;&nbsp;06-deployment/ &nbsp;&rarr; deployment spec, infra notes<br>
+      &nbsp;&nbsp;07-change-mgmt/ &rarr; tech debt register, evolution roadmap<br>
+      &nbsp;&nbsp;tasks/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&rarr; task decomposition for implementation
+    </p>
+  </div>
+
+  <p class="fade-in">
+    Each directory maps to a RUP discipline. Each agent knows which directories it owns and which it can only read. The Business Analyst writes to <code>01-business/</code>. The Architect writes to <code>03-design/</code> and <code>06-deployment/</code>. The QA writes to <code>05-test/</code> and <code>07-change-mgmt/</code>. Nobody writes outside their scope.
+  </p>
+
+  <p class="fade-in">
+    The one exception is <code>00-overview/progression.md</code> &mdash; the Governor's territory. More on that in a moment.
+  </p>
+
+  <!-- SECTION: THE PIPELINE -->
+  <h2 class="fade-in">The Pipeline: Two Directions</h2>
+
+  <p class="fade-in">
+    The Kit supports two pipeline configurations, depending on whether you're starting from scratch or reverse-engineering an existing codebase.
+  </p>
+
+  <h3 class="fade-in">Greenfield: Idea &rarr; Code</h3>
+
+  <div class="diagram fade-in">
+    <div class="diagram-title">Greenfield Pipeline</div>
+    <div class="phase-flow">
+      <div class="phase-box" style="border-color:var(--accent);background:rgba(108,99,255,0.08);">👑 Gov</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">📋 Business</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">📋 Requirements</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">🏛️ Architect</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">🔀 Developer</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">🧪 QA</div>
+    </div>
+  </div>
+
+  <p class="fade-in">
+    This is the forward flow: understand the business, specify requirements, design the architecture, implement, verify. The Governor bootstraps <code>progression.md</code>, routes to each agent in sequence, runs quality gates between phases, and makes the final GO / CONDITIONAL_GO / NO_GO call.
+  </p>
+
+  <h3 class="fade-in">Brownfield: Code &rarr; Spec</h3>
+
+  <div class="diagram fade-in">
+    <div class="diagram-title">Brownfield / Reverse Engineering Pipeline</div>
+    <div class="phase-flow">
+      <div class="phase-box" style="border-color:var(--accent);background:rgba(108,99,255,0.08);">👑 Gov</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">🔀 Developer</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">🏛️ Architect</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">📋 Requirements</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">📋 Business</div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">🧪 QA</div>
+    </div>
+  </div>
+
+  <p class="fade-in">
+    The reverse flow starts with code analysis. The Developer reads the existing codebase and produces implementation notes. The Architect infers the architecture and documents decisions. The Requirements Analyst extracts functional and non-functional requirements from code behavior. The Business Analyst reconstructs the business context. QA closes the loop with a traceability audit: does every requirement map to existing code? Are there code paths that don't trace to any requirement?
+  </p>
+
+  <p class="fade-in">
+    This is the pipeline I used on a real brownfield project &mdash; a Java microservice with 167 classes, Spring Boot 2.7, MySQL, Kafka, and zero documentation. The Kit produced <strong>24 specification artifacts (488 KB of structured markdown)</strong>, identified 83 functional requirements, 22 technical debts (4 critical), and delivered a CONDITIONAL_GO verdict with a six-phase evolution roadmap. All from reading code.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: PROGRESSION PROTOCOL -->
+  <h2 class="fade-in">The Progression Protocol</h2>
+
+  <p class="fade-in">
+    This is the feature that changed everything, and it wasn't in the original design. It came from a bug.
+  </p>
+
+  <p class="fade-in">
+    Early in the Kit's development, I noticed a pattern: the Business Analyst would identify a key constraint (e.g., "all transactions must be idempotent"). The Requirements Analyst would capture it as a requirement. But by the time the Developer started implementing, three phases later, the constraint had faded from context. The Developer would produce non-idempotent code. QA would catch it. The Governor would route back to the Developer. The Developer would fix it. Three wasted iterations because <strong>information decayed across phase boundaries</strong>.
+  </p>
+
+  <p class="fade-in">
+    I call this the <strong>telephone game problem</strong> &mdash; each agent passes context to the next, and each handoff introduces information loss. The specs themselves captured the <em>what</em> (requirements, design decisions), but they didn't capture the <em>why it matters</em>, the <em>watch out for this</em>, or the <em>I'm not sure about that</em>.
+  </p>
+
+  <p class="fade-in">
+    The Progression Protocol solves this with a single artifact: <code>progression.md</code>.
+  </p>
+
+  <div class="callout fade-in">
+    <h4>What Is progression.md?</h4>
+    <p>
+      An <strong>append-only log</strong> maintained exclusively by the Governor. After each agent completes its phase, the Governor conducts a structured debrief (five standard questions) and writes a <strong>Handoff Entry</strong> summarizing:
+    </p>
+    <p>
+      &bull; What the agent produced and key decisions made<br>
+      &bull; <strong>Unresolved Questions</strong> (UQ-NNN) &mdash; things the agent couldn't answer, inherited by downstream agents<br>
+      &bull; <strong>Assumptions</strong> (AS-NNN) &mdash; things the agent assumed but couldn't verify, flagged as mandatory verification targets for QA<br>
+      &bull; <strong>Confidence assessment</strong> (🟢 high / 🟡 medium / 🔴 low) per knowledge area
+    </p>
+  </div>
+
+  <p class="fade-in">
+    The critical design choices:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>Append-only:</strong> Nobody edits previous entries. The log is a faithful record of what each agent knew and didn't know at handoff time.</li>
+    <li><strong>Governor-maintained:</strong> Only the Governor writes to <code>progression.md</code>. Agents provide raw debrief answers; the Governor synthesizes them into the Handoff Entry. This ensures consistency and prevents agents from editorializing their own performance.</li>
+    <li><strong>Inherited questions:</strong> An unresolved question (UQ-003) raised by the Business Analyst doesn't disappear. It gets carried forward in every subsequent Handoff Entry until an agent resolves it &mdash; or until the Governor escalates it to the human.</li>
+    <li><strong>Assumptions are verification targets:</strong> When the Requirements Analyst assumes "the system handles at most 1,000 concurrent users" (AS-005), that assumption is automatically added to the QA's verification checklist. If QA can't verify it, the assumption is flagged in the final verdict.</li>
+  </ul>
+
+  <p class="fade-in">
+    The Debrief Protocol asks five questions at the end of every phase:
+  </p>
+
+  <ol class="fade-in">
+    <li>What did you produce? (artifacts list)</li>
+    <li>What decisions did you make and why?</li>
+    <li>What couldn't you determine? (unresolved questions)</li>
+    <li>What did you assume without verifying? (assumptions)</li>
+    <li>What should the next agent watch out for?</li>
+  </ol>
+
+  <p class="fade-in">
+    Question 5 is the secret weapon. It captures <strong>tacit knowledge</strong> &mdash; the kind of thing a human engineer would mention in a hallway conversation but never write in a spec. <em>"The payment module has a weird race condition when two requests hit simultaneously."</em> <em>"The customer said they want real-time updates, but I think they'd accept 30-second polling."</em> These insights don't belong in requirements or design documents. They belong in the progression log, where downstream agents can benefit from them.
+  </p>
+
+  <blockquote class="fade-in">
+    "Specifications tell agents what to build. The progression log tells them what to watch out for while building it."
+  </blockquote>
+
+  <hr class="separator">
+
+  <!-- SECTION: CONSTRUCTION PROTOCOL -->
+  <h2 class="fade-in">The Construction Protocol</h2>
+
+  <p class="fade-in">
+    The most recent evolution of the Kit added a structured protocol for the Construction phase &mdash; where the Developer and QA work together task by task. This was born from another observed failure: the Developer would implement all tasks in one batch, then QA would review everything at once, find issues scattered across multiple tasks, and the rework loop became chaotic.
+  </p>
+
+  <p class="fade-in">
+    The Construction Protocol enforces a <strong>task-by-task rhythm</strong>:
+  </p>
+
+  <div class="diagram fade-in">
+    <div class="diagram-title">Construction Phase Flow (per task)</div>
+    <div class="phase-flow">
+      <div class="phase-box" style="border-color:var(--accent);background:rgba(108,99,255,0.08);">👑 Gov<br><small style="color:var(--text-dim);font-size:11px;">route task</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">🔀 Dev<br><small style="color:var(--text-dim);font-size:11px;">implement</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box">🧪 QA<br><small style="color:var(--text-dim);font-size:11px;">verify</small></div>
+      <span class="phase-arrow">&rarr;</span>
+      <div class="phase-box" style="border-color:var(--accent);background:rgba(108,99,255,0.08);">👑 Gov<br><small style="color:var(--text-dim);font-size:11px;">gate</small></div>
+    </div>
+  </div>
+
+  <p class="fade-in">
+    The Governor routes one task at a time. The Developer implements it and writes a TDD scaffold in <code>tests/dev/</code>. QA verifies the implementation against four mechanical checklists:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>API Contract</strong> &mdash; Do endpoints match the design spec? Correct methods, paths, status codes?</li>
+    <li><strong>Domain Model</strong> &mdash; Do entities match the architecture? Correct fields, types, constraints?</li>
+    <li><strong>Requirements Traceability</strong> &mdash; Does the code implement the requirement it claims to? Is any requirement logic missing?</li>
+    <li><strong>Business Rules</strong> &mdash; Are business rules from <code>01-business/business-rules.md</code> correctly encoded?</li>
+  </ul>
+
+  <p class="fade-in">
+    Each finding gets a typed ID: <code>[API-001]</code>, <code>[DOM-003]</code>, <code>[REQ-012]</code>, <code>[BR-005]</code>. If findings exist, the Governor routes back to the Developer. Maximum 3 cycles before the Governor escalates to the human. This cap prevents the infinite refinement loops I described in the <a href="003-the-ai-governor-pattern.html">Governor post</a>.
+  </p>
+
+  <h3 class="fade-in">The Anti-Tautology Protocol</h3>
+
+  <p class="fade-in">
+    One of the subtler problems in AI-driven testing: agents write tests that look right but verify nothing. A test that asserts <code>result is not None</code> when the function always returns <em>something</em> is technically passing but functionally useless. I call these <strong>tautological tests</strong>.
+  </p>
+
+  <p class="fade-in">
+    The QA agent includes an Anti-Tautology Protocol that flags seven patterns:
+  </p>
+
+  <ul class="fade-in">
+    <li>Assertions on <code>is not None</code> or truthiness when the return type guarantees non-null</li>
+    <li>Assertions on <code>len(x) &gt; 0</code> without verifying <em>what</em> is in the collection</li>
+    <li>Tests that only verify the happy path with no failure/edge cases</li>
+    <li>Mock setups that return the exact value being asserted (the test proves the mock works, not the code)</li>
+    <li>Tests that duplicate another test with trivially different inputs</li>
+    <li>Tests with no domain-relevant assertion (only structural checks)</li>
+    <li>Tests where the description doesn't match what's actually verified</li>
+  </ul>
+
+  <p class="fade-in">
+    When the QA finds tautological tests in the Developer's <code>tests/dev/</code>, it flags them. More importantly, <strong>the QA writes its own independent verification tests in <code>tests/qa/</code></strong>, providing a second layer of test coverage that doesn't depend on the Developer's assumptions.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: THE GOVERNOR -->
+  <h2 class="fade-in">The Governor Up Close</h2>
+
+  <p class="fade-in">
+    I've described the Governor's <a href="003-the-ai-governor-pattern.html">five strategies</a> and its role in the <a href="006-building-an-airup-prototype.html">library system case study</a>. Here's what it actually does in the Kit, operationally:
+  </p>
+
+  <h3 class="fade-in">Bootstrap</h3>
+  <p class="fade-in">
+    When a new project starts, the Governor detects the mode (Greenfield, Brownfield, or Evolve) and creates the directory structure. It reads existing code if present, initializes <code>progression.md</code>, and determines the pipeline direction.
+  </p>
+
+  <h3 class="fade-in">Routing</h3>
+  <p class="fade-in">
+    The Governor decides which agent to invoke next. This is usually sequential (Business &rarr; Requirements &rarr; Architect &rarr; Developer &rarr; QA), but the Governor can re-route if a quality gate fails. It also handles the Construction phase's task-by-task loop.
+  </p>
+
+  <h3 class="fade-in">Quality Gates</h3>
+  <p class="fade-in">
+    Between every phase, the Governor runs deterministic checks: ID uniqueness, cross-reference completeness, EARS syntax validation, traceability chain coverage. These catch structural issues at zero token cost.
+  </p>
+
+  <h3 class="fade-in">Progression Management</h3>
+  <p class="fade-in">
+    After each agent's debrief, the Governor writes the Handoff Entry. It carries forward unresolved questions and assumptions. It assesses confidence per area. It provides downstream agents with <strong>curated context</strong> &mdash; not just the raw specs, but the interpretive layer that makes the specs actionable.
+  </p>
+
+  <h3 class="fade-in">Circuit Breaking</h3>
+  <p class="fade-in">
+    Maximum iterations per loop. Convergence detection. Cost ceiling per phase. Escalation to human when the Governor can't resolve a dispute between agents.
+  </p>
+
+  <h3 class="fade-in">Final Verdict</h3>
+  <p class="fade-in">
+    The Governor aggregates the QA's verification report, the traceability matrix, and the unresolved questions into a final verdict:
+  </p>
+
+  <table class="comparison-table fade-in">
+    <thead>
+      <tr>
+        <th>Verdict</th>
+        <th>Meaning</th>
+        <th>Criteria</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="color:var(--accent-green);font-weight:700;">GO</td>
+        <td>Ship it</td>
+        <td>All requirements traced and verified. Zero critical tech debt. No unresolved questions.</td>
+      </tr>
+      <tr>
+        <td style="color:var(--accent-warm);font-weight:700;">CONDITIONAL_GO</td>
+        <td>Ship with known risks</td>
+        <td>Requirements met but tech debt exists or assumptions unverified. Evolution roadmap required.</td>
+      </tr>
+      <tr>
+        <td style="color:#EF4444;font-weight:700;">NO_GO</td>
+        <td>Do not ship</td>
+        <td>Critical requirements unmet, structural defects, or unresolvable contradictions.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION: REAL CASE -->
+  <h2 class="fade-in">A Real Brownfield Run</h2>
+
+  <p class="fade-in">
+    To give this concreteness: I ran the Brownfield pipeline on an existing Java microservice &mdash; a judicial block processing system with Spring Boot 2.7, MySQL, Kafka, and ShedLock. The codebase had 167 production classes, 63 test classes, and <strong>zero specification documents</strong>. Nobody had ever written down what the system was supposed to do.
+  </p>
+
+  <p class="fade-in">
+    The Kit produced:
+  </p>
+
+  <ul class="fade-in">
+    <li><strong>5 business artifacts</strong> &mdash; vision (problem statement + positioning), glossary (30 domain terms + 15 acronyms), stakeholder map (15 stakeholders with influence&times;interest matrix), 28 business rules, 6 macro business processes with Mermaid flowcharts</li>
+    <li><strong>2 requirements artifacts</strong> &mdash; 83 functional requirements (RF-01 to RF-83) in EARS notation across 13 domains, 30 non-functional requirements (NFR-01 to NFR-30), 18 use cases with main/alternative/exception flows</li>
+    <li><strong>4 design artifacts</strong> &mdash; hexagonal architecture documentation, 9 ADRs, component diagrams, sequence diagrams for critical flows</li>
+    <li><strong>Quality verdict: CONDITIONAL_GO</strong> &mdash; 22 technical debts identified (4 critical: Spring Boot EOL, credentials in git, no authentication, no circuit breaker), 54% test coverage, evolution roadmap with 6 phases (~26 weeks estimated)</li>
+  </ul>
+
+  <p class="fade-in">
+    Total output: <strong>24 artifacts, 488 KB of structured markdown</strong>. All extracted from code analysis. All cross-referenced with traceability IDs. All living in the repository next to the code.
+  </p>
+
+  <p class="fade-in">
+    The team that maintains this microservice had been working on it for over a year without any of this documentation. It took the Kit approximately <strong>two hours</strong> to produce what would have taken a human analyst weeks &mdash; and what, in practice, would never have been produced at all.
+  </p>
+
+  <blockquote class="fade-in">
+    "The best documentation is the documentation that exists. The RUP AI Kit's real contribution isn't better documentation &mdash; it's making documentation economically viable."
+  </blockquote>
+
+  <hr class="separator">
+
+  <!-- SECTION: WHAT I'VE LEARNED -->
+  <h2 class="fade-in">What Building the Kit Taught Me</h2>
+
+  <h3 class="fade-in">The Governor is the hardest agent to build</h3>
+  <p class="fade-in">
+    The five specialists have clear scopes: read these inputs, produce these outputs. The Governor has to <em>judge</em> &mdash; when to re-route, when to escalate, when to accept "good enough." Every bad judgment compounds downstream. It's also the agent whose prompt evolved the most: from 4K chars in v1 to over 16K chars in the current version, with the Progression Protocol and Construction Protocol adding significant complexity.
+  </p>
+
+  <h3 class="fade-in">Role separation pays for itself</h3>
+  <p class="fade-in">
+    The strict "cannot do" boundaries initially felt like artificial constraints. Why prevent the Developer from writing verification tests? Because when one agent both produces and verifies its own work, it tests its <em>implementation</em>, not the <em>specification</em>. The QA, working from the spec without seeing the code first, catches a different class of bugs. The separation creates genuine independent verification.
+  </p>
+
+  <h3 class="fade-in">The Progression Protocol was the biggest upgrade</h3>
+  <p class="fade-in">
+    Before the Protocol, agents produced excellent individual artifacts but lost context between phases. The Protocol didn't change what the agents produce &mdash; it changed what they <em>know about what came before</em>. That single change reduced rework loops by roughly 40% in my experiments.
+  </p>
+
+  <h3 class="fade-in">Brownfield is harder than greenfield</h3>
+  <p class="fade-in">
+    Reverse-engineering specs from existing code requires the agents to infer intent from implementation &mdash; the opposite of normal flow. The Business Analyst has to guess <em>why</em> a piece of code exists, not just <em>what</em> it does. Requirements are labeled as "INFERRED" or "OBSERVED" rather than "DEFINED." This creates a fundamentally different confidence profile, and the QA has to work harder to verify inferences against behavior.
+  </p>
+
+  <h3 class="fade-in">488 KB of specs is not too much</h3>
+  <p class="fade-in">
+    When I saw the brownfield output, my first reaction was "this is too much documentation." Then I realized: the cost of producing it was near-zero (AI agents, cheap tokens). The cost of <em>not</em> having it was measured in developer hours spent reading code, asking colleagues, and reverse-engineering behavior. 488 KB of specs saves thousands of hours of context recovery. It's not over-documentation &mdash; it's documentation at the price point where it finally makes sense.
+  </p>
+
+  <hr class="separator">
+
+  <!-- SECTION: EVOLUTION -->
+  <h2 class="fade-in">What's Next for the Kit</h2>
+
+  <p class="fade-in">
+    The current Kit (v2) implements three core mechanisms: the Progression Protocol, the Construction Protocol with task-by-task flow, and the Anti-Tautology Protocol. Two more waves are planned but not yet implemented:
+  </p>
+
+  <p class="fade-in">
+    <strong>Wave 2: Mechanical gates.</strong> Currently, quality gates are a mix of deterministic checks and LLM-based review. Wave 2 would add hard mechanical gates: compilation must pass, linter must pass, test suite must execute, coverage must exceed threshold. These run before the QA agent even looks at the code &mdash; catching basic errors at zero token cost.
+  </p>
+
+  <p class="fade-in">
+    <strong>Wave 3: Integration testing.</strong> Testcontainers for database integration tests, contract testing between components, end-to-end flow verification with realistic test data. This is where the Kit moves from "does it compile and pass unit tests?" to "does it actually work in a realistic environment?"
+  </p>
+
+  <p class="fade-in">
+    These waves are proposals &mdash; not commitments. The Kit evolves based on what the experiments reveal. If Wave 2 gates catch issues that the current Protocol already catches, they're redundant. If they catch a new category of issue, they're valuable. Evidence first, features second.
+  </p>
+
+  <p class="fade-in">
+    <strong>Next up:</strong> <em>The Economics of AI-Driven Development</em> &mdash; the series finale. What these experiments tell us about the real cost structure of AI-driven software development, why formal processes are now economically viable, and what it means when the price of intelligence reaches zero.
+  </p>
+
+  <!-- TAGS -->
+  <div class="tags fade-in">
+    <span>RUP AI Kit</span>
+    <span>AIRUP</span>
+    <span>Multi-Agent Systems</span>
+    <span>Progression Protocol</span>
+    <span>Brownfield</span>
+    <span>Reverse Engineering</span>
+    <span>AI Governor</span>
+    <span>SDD</span>
+    <span>Quality Assurance</span>
+  </div>
+
+  <!-- AUTHOR -->
+  <div class="author-card fade-in">
+    <div class="author-avatar">RC</div>
+    <div class="author-info">
+      <h4>Ricardo Costa</h4>
+      <p>Software engineer exploring the intersection of classical software processes and AI-driven development. Currently pursuing a master's degree researching AIRUP &mdash; an AI-first approach to the Rational Unified Process.</p>
+    </div>
+  </div>
+
+</article>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>Brave New IA World &mdash; by Ricardo Costa</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
